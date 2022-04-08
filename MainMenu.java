@@ -22,11 +22,12 @@ public class MainMenu {
         for(int i = 0; i < playground.getPlayground().length; i++){
             constraints.gridx = i+1;
             constraints.gridy = 0;
-            JLabel letterLabel = new JLabel("A");
+            char letter = (char) (65+i);
+            JLabel letterLabel = new JLabel(String.valueOf(letter));
             frame.getContentPane().add(letterLabel,constraints);
             constraints.gridx = 0;
             constraints.gridy = i+1;
-            JLabel numberLabel = new JLabel("1");
+            JLabel numberLabel = new JLabel(String.valueOf(i+1));
             frame.getContentPane().add(numberLabel,constraints);
             for (int j = 0; j < playground.getPlayground()[i].length; j++){
                 constraints.gridx = i+1;
