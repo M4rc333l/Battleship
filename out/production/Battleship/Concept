@@ -1,0 +1,2 @@
+Klassen: Player, Ship, Playground, Game
+Methoden: checkWinner, checkHit  
