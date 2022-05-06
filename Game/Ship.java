@@ -4,10 +4,12 @@ public class Ship {
 
     private boolean status;
     private int size;
+    private int[][] pos;
 
-    public Ship(boolean status, int size) {
+    public Ship(boolean status, int size, int[][] pos) {
         this.status = status;
         this.size = size;
+        this.pos = pos;
     }
     public boolean isStatus() {
         return status;
@@ -18,7 +20,6 @@ public class Ship {
     public int getSize() {
         return size;
     }
-    public void setSize(int size) {
-        this.size = size;
-    }
+    public void setSize(int size) { this.size = size; }
+    public int[][] getPos(){return pos; }
 }

@@ -12,7 +12,6 @@ public class MainMenu {
         Game game = new Game();
         game.intialGUI();
         game.game();
+
     }
-
-
 }
