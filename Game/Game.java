@@ -57,15 +57,25 @@ public class Game {
             vertical = false;
         }
         for(int i=0;i<size;i++){
-            if(!vertical){
+            if(!vertical && x2>x1){
                 pos[0][i] = x1+i;
                 pos[1][i] = y1;
                 playground.getPlayground()[x1+i][y1].setBackground(Color.BLACK);
             }
-            if(vertical){
+            if(!vertical && x1>x2){
+                pos[0][i] = x1-i;
+                pos[1][i] = y1;
+                playground.getPlayground()[x1-i][y1].setBackground(Color.BLACK);
+            }
+            if(vertical && y2>y1){
                 pos[0][i] = x1;
                 pos[1][i] = y1+i;
                 playground.getPlayground()[x1][y1+i].setBackground(Color.BLACK);
+            }
+            if(vertical && y1>y2){
+                pos[0][i] = x1;
+                pos[1][i] = y1-i;
+                playground.getPlayground()[x1][y1-i].setBackground(Color.BLACK);
             }
         }
         shipList.add(new Ship(true, size, pos));
