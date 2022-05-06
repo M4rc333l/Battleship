@@ -49,8 +49,26 @@ public class Game {
         frame.setVisible(true);
     }
 
-    public void placeShip(int x, int y){
-        playground.getPlayground()[x][y].setBackground(Color.BLACK);
+
+    public void placeShip(int x1, int y1, int x2, int y2, int size) {
+        int [][] pos = new int[2][size];
+        boolean vertical = true;
+        if (y1 - y2 == 0){
+            vertical = false;
+        }
+        for(int i=0;i<size;i++){
+            if(!vertical){
+                pos[0][i] = x1+i;
+                pos[1][i] = y1;
+                playground.getPlayground()[x1+i][y1].setBackground(Color.BLACK);
+            }
+            if(vertical){
+                pos[0][i] = x1;
+                pos[1][i] = y1+i;
+                playground.getPlayground()[x1][y1+i].setBackground(Color.BLACK);
+            }
+        }
+        shipList.add(new Ship(true, size, pos));
     }
 
     public void game() {
