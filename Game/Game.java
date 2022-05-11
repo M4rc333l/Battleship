@@ -60,21 +60,25 @@ public class Game {
             if(!vertical && x2>x1){
                 pos[0][i] = x1+i;
                 pos[1][i] = y1;
+                playground.getPlayground()[x1+i][y1].setEnabled(false);
                 playground.getPlayground()[x1+i][y1].setBackground(Color.BLACK);
             }
             if(!vertical && x1>x2){
                 pos[0][i] = x1-i;
                 pos[1][i] = y1;
+                playground.getPlayground()[x1-i][y1].setEnabled(false);
                 playground.getPlayground()[x1-i][y1].setBackground(Color.BLACK);
             }
             if(vertical && y2>y1){
                 pos[0][i] = x1;
                 pos[1][i] = y1+i;
+                playground.getPlayground()[x1][y1+1].setEnabled(false);
                 playground.getPlayground()[x1][y1+i].setBackground(Color.BLACK);
             }
             if(vertical && y1>y2){
                 pos[0][i] = x1;
                 pos[1][i] = y1-i;
+                playground.getPlayground()[x1][y1-1].setEnabled(false);
                 playground.getPlayground()[x1][y1-i].setBackground(Color.BLACK);
             }
         }
@@ -95,33 +99,45 @@ public class Game {
                 playground.getPlayground()[i][j].addMouseListener(new MouseAdapter() {
                     @Override
                     public void mouseClicked(MouseEvent e) {
-
-                        if (zaehler[0] == 0){
-                            x1[0] = finalI;
-                            y1[0] = finalJ;
-                        }
-                        if (zaehler[0] == 1){
-                            x2[0] = finalI;
-                            y2[0] = finalJ;
-                        }
-                        zaehler[0]++;
-
-                        if (zaehler[0] == 2){
+                        if(playground.getPlayground()[finalI][finalJ].isEnabled()){
                             int size = 0;
                             if(turn == 7 || turn == 6) size = 4;
                             if(turn == 5 || turn == 4|| turn == 3) size = 3;
                             if(turn == 2 || turn == 1 || turn == 0) size = 2;
 
-                            placeShip(x1[0],y1[0], x2[0], y2[0], size);
-                            zaehler[0] = 0;
-                            turn--;
+                            if (zaehler[0] == 0){
+                                x1[0] = finalI;
+                                y1[0] = finalJ;
+                                playground.getPlayground()[finalI][finalJ].setEnabled(false);
+                                changeButtons(finalI, finalJ,size, false);
+                            }
+                            if (zaehler[0] == 1){
+                                x2[0] = finalI;
+                                y2[0] = finalJ;
+                                playground.getPlayground()[finalI][finalJ].setEnabled(false);
+                                changeButtons(finalI, finalJ,size, true);
+                            }
+                            zaehler[0]++;
+
+                            if (zaehler[0] == 2){
+                                placeShip(x1[0],y1[0], x2[0], y2[0], size);
+                                zaehler[0] = 0;
+                                turn--;
+                            }
                         }
                     }
                 });
             }
         }
     }
-
+    public void changeButtons(int x, int y, int size, boolean change){
+        size--;
+        for (int i = 0; i < playground.getPlayground().length; i++){
+            for (int j = 0; j < playground.getPlayground()[i].length; j++){
+                if(!((i==x+size && j==y)|| (i==x-size && j==y) || (i==x && j==y+size) || (i==x && j==y-size)) && !(playground.getPlayground()[i][j].getBackground()==new Color(80, 150, 255))) playground.getPlayground()[i][j].setEnabled(change);
+            }
+        }
+    }
     public void shipDestroyed() {
         for (int i = 0; i < shipList.size(); i++) {
             boolean destroyed = true;
