@@ -12,8 +12,11 @@ import java.util.List;
 public class Game {
 
     private int turn = 7;
+    private Color waterColor = new Color(80, 150, 255);
+    private Color shipColor = new Color(0,0,0);
 
     public Game() {
+
     }
 
     //Playground erstellen und Schiffliste erstellen
@@ -61,25 +64,25 @@ public class Game {
                 pos[0][i] = x1+i;
                 pos[1][i] = y1;
                 playground.getPlayground()[x1+i][y1].setEnabled(false);
-                playground.getPlayground()[x1+i][y1].setBackground(Color.BLACK);
+                playground.getPlayground()[x1+i][y1].setBackground(shipColor);
             }
             if(!vertical && x1>x2){
                 pos[0][i] = x1-i;
                 pos[1][i] = y1;
                 playground.getPlayground()[x1-i][y1].setEnabled(false);
-                playground.getPlayground()[x1-i][y1].setBackground(Color.BLACK);
+                playground.getPlayground()[x1-i][y1].setBackground(shipColor);
             }
             if(vertical && y2>y1){
                 pos[0][i] = x1;
                 pos[1][i] = y1+i;
                 playground.getPlayground()[x1][y1+1].setEnabled(false);
-                playground.getPlayground()[x1][y1+i].setBackground(Color.BLACK);
+                playground.getPlayground()[x1][y1+i].setBackground(shipColor);
             }
             if(vertical && y1>y2){
                 pos[0][i] = x1;
                 pos[1][i] = y1-i;
                 playground.getPlayground()[x1][y1-1].setEnabled(false);
-                playground.getPlayground()[x1][y1-i].setBackground(Color.BLACK);
+                playground.getPlayground()[x1][y1-i].setBackground(shipColor);
             }
         }
         shipList.add(new Ship(true, size, pos, vertical));
@@ -131,42 +134,38 @@ public class Game {
     }
     public void changeButtons(int x, int y, int size, boolean change){
         size--;
+        int count = 1;
         for (int i = 0; i < playground.getPlayground().length; i++){
             for (int j = 0; j < playground.getPlayground()[i].length; j++){
-                if(!((i==x+size && j==y)|| (i==x-size && j==y) || (i==x && j==y+size) || (i==x && j==y-size)) && !(playground.getPlayground()[i][j].getBackground()==new Color(80, 150, 255))) playground.getPlayground()[i][j].setEnabled(change);
+                if(change){
+                    if(playground.getPlayground()[i][j].getBackground().equals(shipColor)) {
+                        System.out.println("TEST" +count);
+                        count++;
+                        playground.getPlayground()[i][j].setBackground(waterColor);
+                        playground.getPlayground()[i][j].setEnabled(true);
+                    }
+                }
+                else{
+                    if(!((i==x+size && j==y)|| (i==x-size && j==y) || (i==x && j==y+size) || (i==x && j==y-size))) {
+                        playground.getPlayground()[i][j].setBackground(Color.GRAY);
+                        playground.getPlayground()[i][j].setEnabled(false);
+                    }
+                }
             }
         }
     }
-    public boolean disableNeighbors(){
-        boolean hasNeighbor = false;
-        for (int i = 0; i < shipList.size(); i++) {
-            for (int j = 0; j < shipList.get(i).getSize(); j++) {
-                /*if(!shipList.get(i).getOrientation() && x2>x1){
-                    pos[0][i] = x1+i;
-                    pos[1][i] = y1;
-                    playground.getPlayground()[x1+i][y1].setEnabled(false);
-                    playground.getPlayground()[x1+i][y1].setBackground(Color.BLACK);
-                }
-                if(!shipList.get(i).getOrientation() && x1>x2){
-                    pos[0][i] = x1-i;
-                    pos[1][i] = y1;
-                    playground.getPlayground()[x1-i][y1].setEnabled(false);
-                    playground.getPlayground()[x1-i][y1].setBackground(Color.BLACK);
-                }
-                if(shipList.get(i).getOrientation() && y2>y1){
-                    pos[0][i] = x1;
-                    pos[1][i] = y1+i;
-                    playground.getPlayground()[x1][y1+1].setEnabled(false);
-                    playground.getPlayground()[x1][y1+i].setBackground(Color.BLACK);
-                }
-                if(shipList.get(i).getOrientation() && y1>y2){
-                    pos[0][i] = x1;
-                    pos[1][i] = y1-i;
-                    playground.getPlayground()[x1][y1-1].setEnabled(false);
-                    playground.getPlayground()[x1][y1-i].setBackground(Color.BLACK);
-                }*/
+    public boolean hasNeighbor(int x, int y){
+        boolean hasNeighbor = true;
+        try {
+            if(playground.getPlayground()[x+1][y].getBackground().equals(waterColor) && playground.getPlayground()[x+1][y+1].getBackground().equals(waterColor) &&
+                    playground.getPlayground()[x+1][y-1].getBackground().equals(waterColor) && playground.getPlayground()[x][y+1].getBackground().equals(waterColor) &&
+                    playground.getPlayground()[x][y-1].getBackground().equals(waterColor) && playground.getPlayground()[x-1][y].getBackground().equals(waterColor) &&
+                    playground.getPlayground()[x-1][y+1].getBackground().equals(waterColor) && playground.getPlayground()[x-1][y-1].getBackground().equals(waterColor)){
+                hasNeighbor = false;
             }
         }
+        catch (ArrayIndexOutOfBoundsException ignored){}
+
         return hasNeighbor;
     }
     public void shipDestroyed() {
