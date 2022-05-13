@@ -4,8 +4,8 @@ public class Ship {
 
     private boolean status;
     private int size;
-    private int[][] pos;
-    private boolean orientation;
+    private final int[][] pos;
+    private final boolean orientation;
 
     public Ship(boolean status, int size, int[][] pos, boolean orientation) {
         this.status = status;
