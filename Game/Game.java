@@ -75,13 +75,13 @@ public class Game {
             if(vertical && y2>y1){
                 pos[0][i] = x1;
                 pos[1][i] = y1+i;
-                playground.getPlayground()[x1][y1+1].setEnabled(false);
+                playground.getPlayground()[x1][y1+i].setEnabled(false);
                 playground.getPlayground()[x1][y1+i].setBackground(shipColor);
             }
             if(vertical && y1>y2){
                 pos[0][i] = x1;
                 pos[1][i] = y1-i;
-                playground.getPlayground()[x1][y1-1].setEnabled(false);
+                playground.getPlayground()[x1][y1-i].setEnabled(false);
                 playground.getPlayground()[x1][y1-i].setBackground(shipColor);
             }
         }
@@ -134,38 +134,79 @@ public class Game {
     }
     public void changeButtons(int x, int y, int size, boolean change){
         size--;
-        int count = 1;
         for (int i = 0; i < playground.getPlayground().length; i++){
             for (int j = 0; j < playground.getPlayground()[i].length; j++){
                 if(change){
-                    if(!playground.getPlayground()[i][j].getBackground().equals(shipColor)) {
-                        System.out.println("TEST" +count);
-                        count++;
+                    if(!playground.getPlayground()[i][j].getBackground().equals(shipColor) && !hasNeighbor(i,j) && isPlaceable(i,j,size)) {
                         playground.getPlayground()[i][j].setBackground(waterColor);
                         playground.getPlayground()[i][j].setEnabled(true);
+                    }
+                    if(hasNeighbor(i,j) && !playground.getPlayground()[i][j].getBackground().equals(shipColor)){
+                        playground.getPlayground()[i][j].setBackground(Color.GRAY);
+                        playground.getPlayground()[i][j].setEnabled(false);
                     }
                 }
                 else{
                     if(!((i==x+size && j==y)|| (i==x-size && j==y) || (i==x && j==y+size) || (i==x && j==y-size))) {
-                        playground.getPlayground()[i][j].setBackground(Color.GRAY);
-                        playground.getPlayground()[i][j].setEnabled(false);
+                        if(!playground.getPlayground()[i][j].getBackground().equals(shipColor)){
+                                playground.getPlayground()[i][j].setBackground(Color.GRAY);
+                                playground.getPlayground()[i][j].setEnabled(false);
+                        }
                     }
                 }
             }
         }
     }
     public boolean hasNeighbor(int x, int y){
-        boolean hasNeighbor = true;
-        try {
-            if(playground.getPlayground()[x+1][y].getBackground().equals(waterColor) && playground.getPlayground()[x+1][y+1].getBackground().equals(waterColor) &&
-                    playground.getPlayground()[x+1][y-1].getBackground().equals(waterColor) && playground.getPlayground()[x][y+1].getBackground().equals(waterColor) &&
-                    playground.getPlayground()[x][y-1].getBackground().equals(waterColor) && playground.getPlayground()[x-1][y].getBackground().equals(waterColor) &&
-                    playground.getPlayground()[x-1][y+1].getBackground().equals(waterColor) && playground.getPlayground()[x-1][y-1].getBackground().equals(waterColor)){
-                hasNeighbor = false;
+        boolean hasNeighbor = false;
+            try{
+                if (playground.getPlayground()[x+1][y].getBackground().equals(shipColor)){
+                    hasNeighbor = true;
+                }
             }
-        }
-        catch (ArrayIndexOutOfBoundsException ignored){}
-
+            catch (ArrayIndexOutOfBoundsException ignored){}
+            try{
+                if (playground.getPlayground()[x+1][y+1].getBackground().equals(shipColor)){
+                    hasNeighbor = true;
+                }
+            }
+            catch (ArrayIndexOutOfBoundsException ignored){}
+            try{
+                if (playground.getPlayground()[x+1][y-1].getBackground().equals(shipColor)){
+                    hasNeighbor = true;
+                }
+            }
+            catch (ArrayIndexOutOfBoundsException ignored){}
+            try{
+                if (playground.getPlayground()[x][y+1].getBackground().equals(shipColor)){
+                    hasNeighbor = true;
+                }
+            }
+            catch (ArrayIndexOutOfBoundsException ignored){}
+            try{
+                if ( playground.getPlayground()[x][y-1].getBackground().equals(shipColor)){
+                    hasNeighbor = true;
+                }
+            }
+            catch (ArrayIndexOutOfBoundsException ignored){}
+            try{
+                if (playground.getPlayground()[x-1][y].getBackground().equals(shipColor)){
+                    hasNeighbor = true;
+                }
+            }
+            catch (ArrayIndexOutOfBoundsException ignored){}
+            try{
+                if (playground.getPlayground()[x-1][y+1].getBackground().equals(shipColor)){
+                    hasNeighbor = true;
+                }
+            }
+            catch (ArrayIndexOutOfBoundsException ignored){}
+            try{
+                if (playground.getPlayground()[x-1][y-1].getBackground().equals(shipColor)){
+                    hasNeighbor = true;
+                }
+            }
+            catch (ArrayIndexOutOfBoundsException ignored){}
         return hasNeighbor;
     }
     public void shipDestroyed() {
@@ -181,5 +222,19 @@ public class Game {
                 }
             }
         }
+    }
+    public void hit(int x, int y){
+
+    }
+    public boolean isPlaceable(int x, int y, int size){
+        boolean result = false;
+        changeButtons(x, y, size, false);
+        for(int i = 0; i < playground.getPlayground().length; i++){
+            for(int j = 0; j < playground.getPlayground().length; j++){
+                if(playground.getPlayground()[i][j].equals(waterColor)) result = true;
+            }
+        }
+        //changeButtons(x, y, size, true);
+        return result;
     }
 }
