@@ -16,11 +16,4 @@ public class FieldButton extends JButton {
     public Color getColor(){
         return color;
     }
-    @Override
-    public boolean equals(Object button) {
-        if(this==button) return true;
-        if(!(button instanceof FieldButton)) return false;
-        FieldButton c = (FieldButton) button;
-        return this.color==c.getColor();
-    }
 }

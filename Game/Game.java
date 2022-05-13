@@ -117,12 +117,12 @@ public class Game {
                             if (zaehler[0] == 1){
                                 x2[0] = finalI;
                                 y2[0] = finalJ;
-                                changeButtons(finalI, finalJ,size, true);
                             }
                             zaehler[0]++;
 
                             if (zaehler[0] == 2){
                                 placeShip(x1[0],y1[0], x2[0], y2[0], size);
+                                changeButtons(finalI, finalJ,size, true);
                                 zaehler[0] = 0;
                                 turn--;
                             }
