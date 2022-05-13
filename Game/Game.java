@@ -138,7 +138,7 @@ public class Game {
         for (int i = 0; i < playground.getPlayground().length; i++){
             for (int j = 0; j < playground.getPlayground()[i].length; j++){
                 if(change){
-                    if(playground.getPlayground()[i][j].getBackground().equals(shipColor)) {
+                    if(!playground.getPlayground()[i][j].getBackground().equals(shipColor)) {
                         System.out.println("TEST" +count);
                         count++;
                         playground.getPlayground()[i][j].setBackground(waterColor);
