@@ -118,6 +118,8 @@ public class Game {
                                 if (zaehler[0] == 2){
                                     placeShip(x1[0],y1[0], x2[0], y2[0], size);
                                     playground.changeButtons(finalI,finalJ,size,true);
+                                    if(turn!=6 && turn !=3) playground.disableNotPlaceable(size);
+                                    else if(turn == 6 || turn ==3) playground.disableNotPlaceable(size-1);
                                     zaehler[0] = 0;
                                     turn--;
                                 }

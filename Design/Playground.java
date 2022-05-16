@@ -103,7 +103,6 @@ public class Playground {
                 }
             }
         }
-        if(change) disableNotPlaceable(size);
     }
     public void disableNotPlaceable(int size) {
         size--;
@@ -111,25 +110,29 @@ public class Playground {
             for (int j = 0; j < playground[i].length; j++) {
                 boolean placeable = false;
                 try {
-                    if (playground[i][j+size].getBackground().equals(waterColor)) {
+                    if (playground[i][j+size].getBackground().equals(waterColor) && playground[i][j].getBackground().equals(waterColor)) {
+                        System.out.println("TESTA "+ i +" " +j + "   " +size);
                         placeable = true;
                     }
                 } catch (ArrayIndexOutOfBoundsException ignored) {
                 }
                 try {
-                    if (playground[i][j-size].getBackground().equals(waterColor)) {
+                    if (playground[i][j-size].getBackground().equals(waterColor) && playground[i][j].getBackground().equals(waterColor)) {
+                        System.out.println("TESTB "+ i +" " +j+ "   " +size);
                         placeable = true;
                     }
                 } catch (ArrayIndexOutOfBoundsException ignored) {
                 }
                 try {
-                    if (playground[i+size][j].getBackground().equals(waterColor)) {
+                    if (playground[i+size][j].getBackground().equals(waterColor) && playground[i][j].getBackground().equals(waterColor)) {
+                        System.out.println("TESTC "+ i +" " +j+ "   " +size);
                         placeable = true;
                     }
                 } catch (ArrayIndexOutOfBoundsException ignored) {
                 }
                 try {
-                    if (playground[i-size][j].getBackground().equals(waterColor)) {
+                    if (playground[i-size][j].getBackground().equals(waterColor) && playground[i][j].getBackground().equals(waterColor)) {
+                        System.out.println("TESTD "+ i +" " +j+ "   " +size);
                         placeable = true;
                     }
                 } catch (ArrayIndexOutOfBoundsException ignored) {
