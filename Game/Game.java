@@ -84,6 +84,7 @@ public class Game {
     }
 
     public void game(){
+
         final int[] zaehler = {0};
         final int[] x1 = {0};
         final int[] y1 = {0};
@@ -124,7 +125,12 @@ public class Game {
                                     turn--;
                                 }
                             }
+                            else if (turn==-1){
+                                playground.clear();
+                                turn--;
+                            }
                             else{
+                                playground.getPlayground()[finalI][finalJ].setEnabled(false);
                                 hit(finalI, finalJ);
                             }
                         }
@@ -137,28 +143,40 @@ public class Game {
         for (int i = 0; i < shipList.size(); i++){
             boolean destroyed = true;
             for (int j = 0; j < shipList.get(i).getSize(); j++){
-                if (!playground.getPlayground()[shipList.get(i).getPos()[0][j]][shipList.get(i).getPos()[1][j]].getText().equals("X")){
-                    destroyed = false;
+                //if (!playground.getPlayground()[shipList.get(i).getPos()[0][j]][shipList.get(i).getPos()[1][j]].getText().equals("X")){
+                if (!playground.getPlayground()[shipList.get(i).getPos()[0][j]][shipList.get(i).getPos()[1][j]].getBackground().equals(Color.ORANGE)){
+                        destroyed = false;
                 }
             }
             if (destroyed){
                 for (int j = 0; j < shipList.get(i).getSize(); j++){
                     playground.getPlayground()[shipList.get(i).getPos()[0][j]][shipList.get(i).getPos()[1][j]].setBackground(Color.RED);
-                    shipList.remove(i);
+                    /*if(playground.hasNeighbor(shipList.get(i).getPos()[0][j],shipList.get(i).getPos()[1][j])){
+                        playground.getPlayground()[shipList.get(i).getPos()[0][j]][shipList.get(i).getPos()[1][j]].setEnabled(false);
+                        playground.getPlayground()[shipList.get(i).getPos()[0][j]][shipList.get(i).getPos()[1][j]].setBackground(Color.YELLOW);
+                    }*/
                 }
+                shipList.remove(i);
             }
         }
     }
     public void hit(int x, int y){
         for (Ship ship : shipList) {
+            System.out.println("SCHIFF 1 mit Groeße: " + ship.getSize());
             for (int j = 0; j < ship.getSize(); j++) {
+                System.out.println("J : " + j);
+                System.out.println("POS1 : " + ship.getPos()[0][j]);
+                System.out.println("POS2 : " + ship.getPos()[1][j]);
                 if (ship.getPos()[0][j] == x && ship.getPos()[1][j] == y) {
-                    playground.getPlayground()[ship.getPos()[0][j]][ship.getPos()[1][j]].setText("X TREFFER");
+                    //playground.getPlayground()[ship.getPos()[0][j]][ship.getPos()[1][j]].setText("X TREFFER");
+                    playground.getPlayground()[ship.getPos()[0][j]][ship.getPos()[1][j]].setBackground(Color.ORANGE);
                     shipDestroyed();
                     return;
                 }
+                System.out.println();
             }
         }
-        playground.getPlayground()[x][y].setText("X KEIN TREFFER");
+        //playground.getPlayground()[x][y].setText("X KEIN TREFFER");
+        playground.getPlayground()[x][y].setBackground(Color.WHITE);
     }
 }

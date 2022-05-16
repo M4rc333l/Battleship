@@ -93,7 +93,6 @@ public class Playground {
                         playground[i][j].setBackground(Color.GRAY);
                         playground[i][j].setEnabled(false);
                     }
-                   // System.out.println("x: "+i+", y: "+j + "  Color: "+ playground[i][j].getBackground());
                 }
                 else{
                     if(!((i==x+size && j==y)|| (i==x-size && j==y) || (i==x && j==y+size) || (i==x && j==y-size)) && !playground[i][j].getBackground().equals(shipColor)){
@@ -111,28 +110,24 @@ public class Playground {
                 boolean placeable = false;
                 try {
                     if (playground[i][j+size].getBackground().equals(waterColor) && playground[i][j].getBackground().equals(waterColor)) {
-                        System.out.println("TESTA "+ i +" " +j + "   " +size);
                         placeable = true;
                     }
                 } catch (ArrayIndexOutOfBoundsException ignored) {
                 }
                 try {
                     if (playground[i][j-size].getBackground().equals(waterColor) && playground[i][j].getBackground().equals(waterColor)) {
-                        System.out.println("TESTB "+ i +" " +j+ "   " +size);
                         placeable = true;
                     }
                 } catch (ArrayIndexOutOfBoundsException ignored) {
                 }
                 try {
                     if (playground[i+size][j].getBackground().equals(waterColor) && playground[i][j].getBackground().equals(waterColor)) {
-                        System.out.println("TESTC "+ i +" " +j+ "   " +size);
                         placeable = true;
                     }
                 } catch (ArrayIndexOutOfBoundsException ignored) {
                 }
                 try {
                     if (playground[i-size][j].getBackground().equals(waterColor) && playground[i][j].getBackground().equals(waterColor)) {
-                        System.out.println("TESTD "+ i +" " +j+ "   " +size);
                         placeable = true;
                     }
                 } catch (ArrayIndexOutOfBoundsException ignored) {
@@ -141,6 +136,14 @@ public class Playground {
                     playground[i][j].setBackground(Color.GREEN);
                     playground[i][j].setEnabled(false);
                 }
+            }
+        }
+    }
+    public void clear(){
+        for (int i = 0; i < playground.length; i++) {
+            for (int j = 0; j < playground[i].length; j++) {
+                playground[i][j].setBackground(waterColor);
+                playground[i][j].setEnabled(true);
             }
         }
     }
