@@ -97,41 +97,48 @@ public class Game {
                 playground.getPlayground()[i][j].addMouseListener(new MouseAdapter(){
                     @Override
                     public void mouseClicked(MouseEvent e){
-                        if(playground.getPlayground()[finalI][finalJ].isEnabled()){
-                            if(turn > -1){
+                        if(playground.getPlayground()[finalI][finalJ].isEnabled()) {
+                            if (turn > -1) {
                                 int size = 0;
-                                if(turn == 7 || turn == 6) size = 4;
-                                if(turn == 5 || turn == 4|| turn == 3) size = 3;
-                                if(turn == 2 || turn == 1 || turn == 0) size = 2;
+                                if (turn == 7 || turn == 6) size = 4;
+                                if (turn == 5 || turn == 4 || turn == 3) size = 3;
+                                if (turn == 2 || turn == 1 || turn == 0) size = 2;
 
-                                if (zaehler[0] == 0){
+                                if (zaehler[0] == 0) {
                                     x1[0] = finalI;
                                     y1[0] = finalJ;
                                     playground.getPlayground()[finalI][finalJ].setEnabled(false);
-                                    playground.changeButtons(finalI,finalJ,size,false);
+                                    playground.changeButtons(finalI, finalJ, size, false);
                                 }
-                                if (zaehler[0] == 1){
+                                if (zaehler[0] == 1) {
                                     x2[0] = finalI;
                                     y2[0] = finalJ;
                                 }
                                 zaehler[0]++;
 
-                                if (zaehler[0] == 2){
-                                    placeShip(x1[0],y1[0], x2[0], y2[0], size);
-                                    playground.changeButtons(finalI,finalJ,size,true);
-                                    if(turn!=6 && turn !=3) playground.disableNotPlaceable(size);
-                                    else if(turn == 6 || turn ==3) playground.disableNotPlaceable(size-1);
+                                if (zaehler[0] == 2) {
+                                    placeShip(x1[0], y1[0], x2[0], y2[0], size);
+                                    playground.changeButtons(finalI, finalJ, size, true);
+                                    if (turn != 6 && turn != 3) playground.disableNotPlaceable(size);
+                                    else if (turn == 6 || turn == 3) playground.disableNotPlaceable(size - 1);
                                     zaehler[0] = 0;
                                     turn--;
                                 }
                             }
-                            else if (turn==-1){
+                            else if (turn == -1) {
                                 playground.clear();
                                 turn--;
                             }
-                            else{
+                            else if (turn < -1 && turn > -1000) {
                                 playground.getPlayground()[finalI][finalJ].setEnabled(false);
                                 hit(finalI, finalJ);
+                                if (shipList.isEmpty()) {
+                                    System.out.println("LISTE LEER");
+                                    turn = -1000;
+                                }
+                            }
+                            else {
+                                System.out.println("ENDEEE");
                             }
                         }
                     }
@@ -157,23 +164,16 @@ public class Game {
         }
         for (int i = 0; i < playground.getPlayground().length; i++){
             for (int j = 0; j < playground.getPlayground()[i].length; j++){
-            if(playground.hasNeighbor(i,j,Color.RED) && !playground.getPlayground()[i][j].getBackground().equals(Color.RED)){
+                if(playground.hasNeighbor(i,j,Color.RED) && !playground.getPlayground()[i][j].getBackground().equals(Color.RED)){
                         playground.getPlayground()[i][j].setEnabled(false);
                         playground.getPlayground()[i][j].setBackground(Color.YELLOW);
-                    }
+                }
             }
-        }
-        if(shipList.isEmpty()){
-
         }
     }
     public void hit(int x, int y){
         for (Ship ship : shipList) {
-            System.out.println("SCHIFF 1 mit Groeße: " + ship.getSize());
             for (int j = 0; j < ship.getSize(); j++) {
-                System.out.println("J : " + j);
-                System.out.println("POS1 : " + ship.getPos()[0][j]);
-                System.out.println("POS2 : " + ship.getPos()[1][j]);
                 if (ship.getPos()[0][j] == x && ship.getPos()[1][j] == y) {
                     //playground.getPlayground()[ship.getPos()[0][j]][ship.getPos()[1][j]].setText("X TREFFER");
                     playground.getPlayground()[ship.getPos()[0][j]][ship.getPos()[1][j]].setBackground(Color.ORANGE);
