@@ -151,13 +151,20 @@ public class Game {
             if (destroyed){
                 for (int j = 0; j < shipList.get(i).getSize(); j++){
                     playground.getPlayground()[shipList.get(i).getPos()[0][j]][shipList.get(i).getPos()[1][j]].setBackground(Color.RED);
-                    /*if(playground.hasNeighbor(shipList.get(i).getPos()[0][j],shipList.get(i).getPos()[1][j])){
-                        playground.getPlayground()[shipList.get(i).getPos()[0][j]][shipList.get(i).getPos()[1][j]].setEnabled(false);
-                        playground.getPlayground()[shipList.get(i).getPos()[0][j]][shipList.get(i).getPos()[1][j]].setBackground(Color.YELLOW);
-                    }*/
                 }
                 shipList.remove(i);
             }
+        }
+        for (int i = 0; i < playground.getPlayground().length; i++){
+            for (int j = 0; j < playground.getPlayground()[i].length; j++){
+            if(playground.hasNeighbor(i,j,Color.RED) && !playground.getPlayground()[i][j].getBackground().equals(Color.RED)){
+                        playground.getPlayground()[i][j].setEnabled(false);
+                        playground.getPlayground()[i][j].setBackground(Color.YELLOW);
+                    }
+            }
+        }
+        if(shipList.isEmpty()){
+
         }
     }
     public void hit(int x, int y){
