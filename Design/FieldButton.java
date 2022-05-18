@@ -1,20 +1,16 @@
 package Design;
 
 import javax.swing.*;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.lang.reflect.Field;
+import java.awt.*;
 
 public class FieldButton extends JButton {
+
+    private final Color color;
     public FieldButton(){
         super();
-        this.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-
-                System.out.println(getX());
-                System.out.println(getY());
-            }
-        });
+        this.color = new Color(80,150,255);
+    }
+    public Color getColor(){
+        return color;
     }
 }
