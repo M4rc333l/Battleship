@@ -14,7 +14,7 @@ public class Server extends UnicastRemoteObject implements BattleshipServer{
     public static void main(String[] args) throws RemoteException, AlreadyBoundException {
         BattleshipServer server = new Server();
         Registry registry = LocateRegistry.createRegistry(1099);
-        registry.rebind("Server", server);
+        registry.rebind("BattleshipServer", server);
         System.out.println("Server ready");
     }
     @Override
