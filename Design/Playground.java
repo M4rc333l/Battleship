@@ -21,9 +21,7 @@ public class Playground {
     public JButton[][] getPlayground() {
         return playground;
     }
-    public Color getWaterColor(){
-        return waterColor;
-    }
+
     public Color getShipColor(){
         return shipColor;
     }
@@ -140,10 +138,10 @@ public class Playground {
         }
     }
     public void clear(){
-        for (int i = 0; i < playground.length; i++) {
-            for (int j = 0; j < playground[i].length; j++) {
-                playground[i][j].setBackground(waterColor);
-                playground[i][j].setEnabled(true);
+        for (JButton[] jButtons : playground) {
+            for (JButton jButton : jButtons) {
+                jButton.setBackground(waterColor);
+                jButton.setEnabled(true);
             }
         }
     }
