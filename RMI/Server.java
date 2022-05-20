@@ -1,6 +1,5 @@
 package RMI;
 
-import java.rmi.AlreadyBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
@@ -11,7 +10,7 @@ public class Server extends UnicastRemoteObject implements BattleshipServer{
     public Server() throws RemoteException {
         super();
     }
-    public static void main(String[] args) throws RemoteException, AlreadyBoundException {
+    public static void main(String[] args) throws RemoteException {
         BattleshipServer server = new Server();
         Registry registry = LocateRegistry.createRegistry(1099);
         registry.rebind("BattleshipServer", server);

@@ -12,8 +12,8 @@ import java.util.List;
 public class Game {
 
     private int turn = 7;
-    private JFrame frame = new JFrame("Battleships");
-    private GridBagConstraints constraints = new GridBagConstraints();
+    private final JFrame frame = new JFrame("Battleships");
+    private final GridBagConstraints constraints = new GridBagConstraints();
 
     public Game() {
         frame.setSize(2000, 1000);
@@ -90,7 +90,7 @@ public class Game {
                                     placeShip(x1[0], y1[0], x2[0], y2[0], size);
                                     playground.changeButtons(finalI, finalJ, size, true);
                                     if (turn != 6 && turn != 3) playground.disableNotPlaceable(size);
-                                    else if (turn == 6 || turn == 3) playground.disableNotPlaceable(size - 1);
+                                    else playground.disableNotPlaceable(size - 1);
                                     zaehler[0] = 0;
                                     turn--;
                                 }
@@ -99,7 +99,7 @@ public class Game {
                                 playground.clear();
                                 turn--;
                             }
-                            else if (turn < -1 && turn > -1000) {
+                            else if (turn > -1000) {
                                 playground.getPlayground()[finalI][finalJ].setEnabled(false);
                                 hit(finalI, finalJ);
                                 if (shipList.isEmpty()) {
