@@ -28,74 +28,74 @@ public class Playground {
         return shipColor;
     }
 
-    public boolean hasNeighbor(int x, int y, Color color){
+    public boolean hasNeighbor(int x, int y, Color color) {
         boolean hasNeighbor = false;
         try{
-            if (playground[x+1][y].getBackground().equals(color)){
+            if (playground[x+1][y].getBackground().equals(color)) {
                 hasNeighbor = true;
             }
         }
         catch (ArrayIndexOutOfBoundsException ignored){}
         try{
-            if (playground[x+1][y+1].getBackground().equals(color)){
+            if (playground[x+1][y+1].getBackground().equals(color)) {
                 hasNeighbor = true;
             }
         }
         catch (ArrayIndexOutOfBoundsException ignored){}
         try{
-            if (playground[x+1][y-1].getBackground().equals(color)){
+            if (playground[x+1][y-1].getBackground().equals(color)) {
                 hasNeighbor = true;
             }
         }
         catch (ArrayIndexOutOfBoundsException ignored){}
         try{
-            if (playground[x][y+1].getBackground().equals(color)){
+            if (playground[x][y+1].getBackground().equals(color)) {
                 hasNeighbor = true;
             }
         }
         catch (ArrayIndexOutOfBoundsException ignored){}
         try{
-            if ( playground[x][y-1].getBackground().equals(color)){
+            if ( playground[x][y-1].getBackground().equals(color)) {
                 hasNeighbor = true;
             }
         }
         catch (ArrayIndexOutOfBoundsException ignored){}
         try{
-            if (playground[x-1][y].getBackground().equals(color)){
+            if (playground[x-1][y].getBackground().equals(color)) {
                 hasNeighbor = true;
             }
         }
         catch (ArrayIndexOutOfBoundsException ignored){}
         try{
-            if (playground[x-1][y+1].getBackground().equals(color)){
+            if (playground[x-1][y+1].getBackground().equals(color)) {
                 hasNeighbor = true;
             }
         }
         catch (ArrayIndexOutOfBoundsException ignored){}
         try{
-            if (playground[x-1][y-1].getBackground().equals(color)){
+            if (playground[x-1][y-1].getBackground().equals(color)) {
                 hasNeighbor = true;
             }
         }
         catch (ArrayIndexOutOfBoundsException ignored){}
         return hasNeighbor;
     }
-    public void changeButtons(int x, int y, int size, boolean change){
+    public void changeButtons(int x, int y, int size, boolean change) {
         size--;
-        for (int i = 0; i < playground.length; i++){
-            for (int j = 0; j < playground[i].length; j++){
+        for (int i = 0; i < playground.length; i++) {
+            for (int j = 0; j < playground[i].length; j++) {
                 if(change){
-                    if(!playground[i][j].getBackground().equals(shipColor) && !hasNeighbor(i,j,shipColor)){
+                    if(!playground[i][j].getBackground().equals(shipColor) && !hasNeighbor(i,j,shipColor)) {
                         playground[i][j].setBackground(waterColor);
                         playground[i][j].setEnabled(true);
                     }
-                    if(hasNeighbor(i,j,shipColor) && !playground[i][j].getBackground().equals(shipColor)){
+                    if(hasNeighbor(i,j,shipColor) && !playground[i][j].getBackground().equals(shipColor)) {
                         playground[i][j].setBackground(Color.GRAY);
                         playground[i][j].setEnabled(false);
                     }
                 }
                 else{
-                    if(!((i==x+size && j==y)|| (i==x-size && j==y) || (i==x && j==y+size) || (i==x && j==y-size)) && !playground[i][j].getBackground().equals(shipColor)){
+                    if(!((i==x+size && j==y)|| (i==x-size && j==y) || (i==x && j==y+size) || (i==x && j==y-size)) && !playground[i][j].getBackground().equals(shipColor)) {
                             playground[i][j].setBackground(Color.GRAY);
                             playground[i][j].setEnabled(false);
                     }

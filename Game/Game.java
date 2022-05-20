@@ -2,7 +2,6 @@ package Game;
 
 import Design.*;
 
-import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -12,59 +11,27 @@ import java.util.List;
 public class Game {
 
     private int turn = 7;
-    private final JFrame frame = new JFrame("Battleships");
-    private final GridBagConstraints constraints = new GridBagConstraints();
-
-    public Game() {
-        frame.setSize(2000, 1000);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setLayout(new GridBagLayout());
-        constraints.insets = new Insets(22, 22, 22, 22);
-        constraints.gridwidth = 1;
-        constraints.gridheight = 1;
-    }
+    private final BattleshipFrame frame = new BattleshipFrame();
 
     //Playground erstellen und Schiffliste erstellen
     private final List<Ship> shipList = new ArrayList<>();
     private final Playground playground = new Playground();
     private final Playground enemyPlayground = new Playground();
 
-
-    public void intialGUI(int size, Playground playground){
-        for (int i = size-10; i < size; i++) {
-            constraints.gridx = i+1;
-            constraints.gridy = 0;
-            char letter = (char) (65+(i-(size-10)));
-            JLabel letterLabel = new JLabel(String.valueOf(letter));
-            frame.getContentPane().add(letterLabel, constraints);
-            constraints.gridx = 0;
-            constraints.gridy = i+1;
-            JLabel numberLabel = new JLabel(String.valueOf((i-(size-10))+1));
-            frame.getContentPane().add(numberLabel, constraints);
-            for (int j = 0; j < 10; j++) {
-                constraints.gridx = i+1;
-                constraints.gridy = j+1;
-                //Hier wird der Playground in einen Frame eingefügt
-                frame.getContentPane().add(playground.getPlayground()[i-(size-10)][j],constraints);
-            }
-        }
-        frame.setVisible(true);
-    }
-
-    public void game(){
-        intialGUI(10, playground);
-        //intialGUI(20, enemyPlayground);
+    public void game() {
+        frame.intialGUI(10, playground);
+        frame.intialGUI(21, enemyPlayground);
 
         final int[] zaehler = {0};
         final int[] x1 = {0};
         final int[] y1 = {0};
         final int[] x2 = {0};
         final int[] y2 = {0};
-        for (int i = 0; i < playground.getPlayground().length; i++){
-            for (int j = 0; j < playground.getPlayground()[i].length; j++){
+        for (int i = 0; i < playground.getPlayground().length; i++) {
+            for (int j = 0; j < playground.getPlayground()[i].length; j++) {
                 int finalI = i;
                 int finalJ = j;
-                playground.getPlayground()[i][j].addMouseListener(new MouseAdapter(){
+                playground.getPlayground()[i][j].addMouseListener(new MouseAdapter() {
                     @Override
                     public void mouseClicked(MouseEvent e){
                         if(playground.getPlayground()[finalI][finalJ].isEnabled()) {
@@ -116,55 +83,55 @@ public class Game {
             }
         }
     }
-    public void placeShip(int x1, int y1, int x2, int y2, int size){
+    public void placeShip(int x1, int y1, int x2, int y2, int size) {
         int [][] pos = new int[2][size];
         boolean vertical = y1 - y2 != 0;
-        for(int i = 0; i < size; i++){
-            if(!vertical && x2 > x1){
+        for(int i = 0; i < size; i++) {
+            if(!vertical && x2 > x1) {
                 pos[0][i] = x1+i;
                 pos[1][i] = y1;
                 playground.getPlayground()[x1+i][y1].setEnabled(false);
                 playground.getPlayground()[x1+i][y1].setBackground(playground.getShipColor());
             }
-            if(!vertical && x1 > x2){
+            if(!vertical && x1 > x2) {
                 pos[0][i] = x1-i;
                 pos[1][i] = y1;
                 playground.getPlayground()[x1-i][y1].setEnabled(false);
                 playground.getPlayground()[x1-i][y1].setBackground(playground.getShipColor());
             }
-            if(vertical && y2 > y1){
+            if(vertical && y2 > y1) {
                 pos[0][i] = x1;
                 pos[1][i] = y1+i;
                 playground.getPlayground()[x1][y1+i].setEnabled(false);
                 playground.getPlayground()[x1][y1+i].setBackground(playground.getShipColor());
             }
-            if(vertical && y1 > y2){
+            if(vertical && y1 > y2) {
                 pos[0][i] = x1;
                 pos[1][i] = y1-i;
                 playground.getPlayground()[x1][y1-i].setEnabled(false);
                 playground.getPlayground()[x1][y1-i].setBackground(playground.getShipColor());
             }
         }
-        shipList.add(new Ship(true,size,pos,vertical));
+        shipList.add(new Ship(size,pos));
     }
-    public void shipDestroyed(){
-        for (int i = 0; i < shipList.size(); i++){
+    public void shipDestroyed() {
+        for (int i = 0; i < shipList.size(); i++) {
             boolean destroyed = true;
-            for (int j = 0; j < shipList.get(i).getSize(); j++){
+            for (int j = 0; j < shipList.get(i).getSize(); j++) {
                 //if (!playground.getPlayground()[shipList.get(i).getPos()[0][j]][shipList.get(i).getPos()[1][j]].getText().equals("X")){
                 if (!playground.getPlayground()[shipList.get(i).getPos()[0][j]][shipList.get(i).getPos()[1][j]].getBackground().equals(Color.ORANGE)){
                         destroyed = false;
                 }
             }
             if (destroyed){
-                for (int j = 0; j < shipList.get(i).getSize(); j++){
+                for (int j = 0; j < shipList.get(i).getSize(); j++) {
                     playground.getPlayground()[shipList.get(i).getPos()[0][j]][shipList.get(i).getPos()[1][j]].setBackground(Color.RED);
                 }
                 shipList.remove(i);
             }
         }
-        for (int i = 0; i < playground.getPlayground().length; i++){
-            for (int j = 0; j < playground.getPlayground()[i].length; j++){
+        for (int i = 0; i < playground.getPlayground().length; i++) {
+            for (int j = 0; j < playground.getPlayground()[i].length; j++) {
                 if(playground.hasNeighbor(i,j,Color.RED) && !playground.getPlayground()[i][j].getBackground().equals(Color.RED)){
                         playground.getPlayground()[i][j].setEnabled(false);
                         playground.getPlayground()[i][j].setBackground(Color.YELLOW);
@@ -172,7 +139,7 @@ public class Game {
             }
         }
     }
-    public void hit(int x, int y){
+    public void hit(int x, int y) {
         for (Ship ship : shipList) {
             for (int j = 0; j < ship.getSize(); j++) {
                 if (ship.getPos()[0][j] == x && ship.getPos()[1][j] == y) {
