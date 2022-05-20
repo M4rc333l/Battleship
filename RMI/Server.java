@@ -8,7 +8,7 @@ import java.rmi.server.UnicastRemoteObject;
 
 public class Server extends UnicastRemoteObject implements BattleshipServer{
 
-    protected Server() throws RemoteException {
+    public Server() throws RemoteException {
         super();
     }
     public static void main(String[] args) throws RemoteException, AlreadyBoundException {
