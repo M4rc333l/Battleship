@@ -16,7 +16,12 @@ public class Game {
     private GridBagConstraints constraints = new GridBagConstraints();
 
     public Game() {
-
+        frame.setSize(2000, 1000);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setLayout(new GridBagLayout());
+        constraints.insets = new Insets(22, 22, 22, 22);
+        constraints.gridwidth = 1;
+        constraints.gridheight = 1;
     }
 
     //Playground erstellen und Schiffliste erstellen

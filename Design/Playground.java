@@ -13,7 +13,7 @@ public class Playground {
         for (int i = 0; i < playground.length; i++) {
             for (int j = 0; j < playground[i].length; j++) {
                 playground[i][j] = new JButton();
-                playground[i][j].setPreferredSize(new Dimension(20, 20));
+                playground[i][j].setPreferredSize(new Dimension(20,20));
                 playground[i][j].setBackground(waterColor);
             }
         }
