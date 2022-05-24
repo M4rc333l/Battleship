@@ -9,7 +9,7 @@ public class Client {
     private final BattleshipServer server;
 
     public Client() throws RemoteException, NotBoundException {
-        Registry registry = LocateRegistry.getRegistry("26.197.80.44",1099);
+        Registry registry = LocateRegistry.getRegistry("localhost",1099);
         server = (BattleshipServer) registry.lookup("BattleshipServer");
     }
     public String method() throws RemoteException {

@@ -1,5 +1,7 @@
 package RMI;
 
+import Game.Game;
+
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
@@ -10,6 +12,7 @@ public class Server extends UnicastRemoteObject implements BattleshipServer{
     public Server() throws RemoteException {
         super();
     }
+
     public static void main(String[] args) throws RemoteException {
         BattleshipServer server = new Server();
         Registry registry = LocateRegistry.createRegistry(1099);
@@ -18,6 +21,14 @@ public class Server extends UnicastRemoteObject implements BattleshipServer{
     }
     @Override
     public String method() throws RemoteException {
-        return null;
+        //Game game = new Game()
+       // game.game();
+        return "Yes";
+    }
+    public void spielstarten() throws RemoteException{
+        System.out.println("1234");
+    }
+    public int zahl() throws RemoteException{
+        return 15;
     }
 }

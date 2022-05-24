@@ -16,6 +16,9 @@ public class BattleshipFrame extends JFrame {
         constraints.gridwidth = 1;
         constraints.gridheight = 1;
     }
+    public void gameOverloay(){
+
+    }
     public void intialGUI(int size, Playground playground) {
         for (int i = size-10; i < size; i++) {
             constraints.gridx = i+1;
