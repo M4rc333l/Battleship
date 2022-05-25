@@ -12,7 +12,6 @@ public class Server extends UnicastRemoteObject implements BattleshipServer{
     public Server() throws RemoteException {
         super();
     }
-
     public static void main(String[] args) throws RemoteException {
         BattleshipServer server = new Server();
         Registry registry = LocateRegistry.createRegistry(1099);
@@ -21,8 +20,8 @@ public class Server extends UnicastRemoteObject implements BattleshipServer{
     }
     @Override
     public String method() throws RemoteException {
-        //Game game = new Game()
-       // game.game();
+        Game game = new Game("Server");
+        game.game();
         return "Yes";
     }
     public void spielstarten() throws RemoteException{

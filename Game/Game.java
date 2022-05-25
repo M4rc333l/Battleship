@@ -10,6 +10,7 @@ import java.util.List;
 
 public class Game {
 
+    private String mode;
     private int turn = 7;
     private final BattleshipFrame frame = new BattleshipFrame();
 
@@ -17,6 +18,10 @@ public class Game {
     private final List<Ship> shipList = new ArrayList<>();
     private final Playground playground = new Playground();
     private final Playground enemyPlayground = new Playground();
+
+    public Game(String mode) {
+        this.mode = mode;
+    }
 
     public void game() {
         frame.intialGUI(10, playground);
@@ -70,12 +75,16 @@ public class Game {
                                 playground.getPlayground()[finalI][finalJ].setEnabled(false);
                                 hit(finalI, finalJ);
                                 if (shipList.isEmpty()) {
-                                    System.out.println("LISTE LEER");
                                     turn = -1000;
                                 }
                             }
                             else {
-                                System.out.println("ENDEEE");
+                                if(mode.equals("Server")){
+
+                                }
+                                else if(mode.equals("Client")){
+
+                                }
                             }
                         }
                     }
@@ -118,7 +127,6 @@ public class Game {
         for (int i = 0; i < shipList.size(); i++) {
             boolean destroyed = true;
             for (int j = 0; j < shipList.get(i).getSize(); j++) {
-                //if (!playground.getPlayground()[shipList.get(i).getPos()[0][j]][shipList.get(i).getPos()[1][j]].getText().equals("X")){
                 if (!playground.getPlayground()[shipList.get(i).getPos()[0][j]][shipList.get(i).getPos()[1][j]].getBackground().equals(Color.ORANGE)){
                         destroyed = false;
                 }
@@ -143,7 +151,6 @@ public class Game {
         for (Ship ship : shipList) {
             for (int j = 0; j < ship.getSize(); j++) {
                 if (ship.getPos()[0][j] == x && ship.getPos()[1][j] == y) {
-                    //playground.getPlayground()[ship.getPos()[0][j]][ship.getPos()[1][j]].setText("X TREFFER");
                     playground.getPlayground()[ship.getPos()[0][j]][ship.getPos()[1][j]].setBackground(Color.ORANGE);
                     shipDestroyed();
                     return;
@@ -151,7 +158,6 @@ public class Game {
                 System.out.println();
             }
         }
-        //playground.getPlayground()[x][y].setText("X KEIN TREFFER");
         playground.getPlayground()[x][y].setBackground(Color.WHITE);
     }
 }
