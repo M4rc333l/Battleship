@@ -9,7 +9,7 @@ import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
 
-public class Server extends UnicastRemoteObject implements BattleshipServer{
+public class Server extends UnicastRemoteObject implements BattleshipServer {
 
     private Playground p1 = new Playground();
     private Playground p2 = new Playground();
@@ -25,8 +25,8 @@ public class Server extends UnicastRemoteObject implements BattleshipServer{
     }
     @Override
     public String method(boolean host) throws RemoteException {
-        Game game = new Game(host);
-        game.game();
+        Game game = new Game();
+        game.game(host);
         return "Yes";
     }
     public void start() throws RemoteException {

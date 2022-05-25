@@ -3,15 +3,12 @@ package Game;
 import Design.*;
 import RMI.*;
 
+import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.rmi.NotBoundException;
-import java.rmi.RemoteException;
 
 public class Game {
-
-    private boolean host;
 
     private int turn = 7;
     private final BattleshipFrame frame = new BattleshipFrame();
@@ -20,12 +17,13 @@ public class Game {
     private Playground playground = new Playground();
     private Playground enemyPlayground = new Playground();
 
-    public Game(boolean host){
-        this.host = host;
-    }
+    public void game(boolean host) {
 
-    public void game() {
         frame.intialGUI(10, playground);
+        frame.intialGUI(21, enemyPlayground);
+        enemyPlayground.enabled(false);
+
+        System.out.println(host);
 
         final int[] zaehler = {0};
         final int[] x1 = {0};
@@ -75,19 +73,24 @@ public class Game {
                                 turn--;
                             }
                             else if (turn > -1000) {
-                                playground.getPlayground()[finalI][finalJ].setEnabled(false);
-                                hit(finalI, finalJ);
-                                if (playground.getShipList().isEmpty()) {
-                                    turn = -1000;
-                                }
-                            }
-                            else {
                                 if(host){
                                     System.out.println("ICH BIN HOST");
+                                    playground.getPlayground()[finalI][finalJ].setEnabled(false);
+                                    hit(finalI, finalJ, playground);
+                                    if (playground.getShipList().isEmpty()) {
+                                        turn = -1000;
+                                    }
                                 }
                                 else if(!host){
                                     System.out.println("ICH BIN CLIENT");
+                                    playground.getPlayground()[finalI][finalJ].setEnabled(false);
+                                    hit(finalI, finalJ, playground);
+                                    if (playground.getShipList().isEmpty()) {
+                                        turn = -1000;
+                                    }
                                 }
+                            }
+                            else {
                                 /*try {
                                     client.sendPlayground(playground);
                                     enemyPlayground = enemyPlayground.copyPlayground(client.getPlayground());
@@ -157,7 +160,7 @@ public class Game {
             }
         }
     }
-    public void hit(int x, int y) {
+    public void hit(int x, int y, Playground playground) {
         for (Ship ship : playground.getShipList()) {
             for (int j = 0; j < ship.getSize(); j++) {
                 if (ship.getPos()[0][j] == x && ship.getPos()[1][j] == y) {

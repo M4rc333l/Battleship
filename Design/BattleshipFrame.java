@@ -2,6 +2,8 @@ package Design;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 public class BattleshipFrame extends JFrame {
 
@@ -12,14 +14,12 @@ public class BattleshipFrame extends JFrame {
         setSize(2000, 1000);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLayout(new GridBagLayout());
+    }
+
+    public void intialGUI(int size, Playground playground) {
         constraints.insets = new Insets(6, 6, 6, 6);
         constraints.gridwidth = 1;
         constraints.gridheight = 1;
-    }
-    public void gameOverloay(){
-
-    }
-    public void intialGUI(int size, Playground playground) {
         for (int i = size-10; i < size; i++) {
             constraints.gridx = i+1;
             constraints.gridy = 0;

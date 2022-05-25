@@ -167,4 +167,11 @@ public class Playground {
         }
         return p;
     }
+    public void enabled(boolean enable){
+        for(int i=0;i<this.playground.length;i++) {
+            for(int j=0;j<this.playground[i].length;j++) {
+                playground[i][j].setEnabled(enable);
+            }
+        }
+    }
 }
