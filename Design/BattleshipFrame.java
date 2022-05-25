@@ -12,7 +12,7 @@ public class BattleshipFrame extends JFrame {
         setSize(2000, 1000);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLayout(new GridBagLayout());
-        constraints.insets = new Insets(22, 22, 22, 22);
+        constraints.insets = new Insets(6, 6, 6, 6);
         constraints.gridwidth = 1;
         constraints.gridheight = 1;
     }

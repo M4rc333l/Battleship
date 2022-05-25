@@ -1,6 +1,7 @@
 package Game;
 
 import Design.*;
+import RMI.*;
 
 import java.awt.*;
 import java.awt.event.MouseAdapter;
@@ -10,22 +11,21 @@ import java.util.List;
 
 public class Game {
 
-    private String mode;
+    private boolean host;
+
     private int turn = 7;
     private final BattleshipFrame frame = new BattleshipFrame();
 
     //Playground erstellen und Schiffliste erstellen
-    private final List<Ship> shipList = new ArrayList<>();
-    private final Playground playground = new Playground();
-    private final Playground enemyPlayground = new Playground();
+    private Playground playground = new Playground();
+    private Playground enemyPlayground = new Playground();
 
-    public Game(String mode) {
-        this.mode = mode;
+    public Game(boolean host){
+        this.host = host;
     }
 
     public void game() {
         frame.intialGUI(10, playground);
-        frame.intialGUI(21, enemyPlayground);
 
         final int[] zaehler = {0};
         final int[] x1 = {0};
@@ -65,6 +65,8 @@ public class Game {
                                     else playground.disableNotPlaceable(size - 1);
                                     zaehler[0] = 0;
                                     turn--;
+                                    enemyPlayground = enemyPlayground.copyPlayground(playground);
+                                    frame.intialGUI(21, enemyPlayground);
                                 }
                             }
                             else if (turn == -1) {
@@ -74,17 +76,24 @@ public class Game {
                             else if (turn > -1000) {
                                 playground.getPlayground()[finalI][finalJ].setEnabled(false);
                                 hit(finalI, finalJ);
-                                if (shipList.isEmpty()) {
+                                if (playground.getShipList().isEmpty()) {
                                     turn = -1000;
                                 }
                             }
                             else {
-                                if(mode.equals("Server")){
-
+                                if(host){
+                                    System.out.println("ICH BIN HOST");
                                 }
-                                else if(mode.equals("Client")){
-
+                                else if(!host){
+                                    System.out.println("ICH BIN CLIENT");
                                 }
+                                /*try {
+                                    client.sendPlayground(playground);
+                                    enemyPlayground = enemyPlayground.copyPlayground(client.getPlayground());
+                                    frame.intialGUI(21, enemyPlayground);
+                                } catch (RemoteException ex) {
+                                    ex.printStackTrace();
+                                }*/
                             }
                         }
                     }
@@ -121,21 +130,21 @@ public class Game {
                 playground.getPlayground()[x1][y1-i].setBackground(playground.getShipColor());
             }
         }
-        shipList.add(new Ship(size,pos));
+        playground.getShipList().add(new Ship(size,pos));
     }
     public void shipDestroyed() {
-        for (int i = 0; i < shipList.size(); i++) {
+        for (int i = 0; i < playground.getShipList().size(); i++) {
             boolean destroyed = true;
-            for (int j = 0; j < shipList.get(i).getSize(); j++) {
-                if (!playground.getPlayground()[shipList.get(i).getPos()[0][j]][shipList.get(i).getPos()[1][j]].getBackground().equals(Color.ORANGE)){
-                        destroyed = false;
+            for (int j = 0; j < playground.getShipList().get(i).getSize(); j++) {
+                if (!playground.getPlayground()[playground.getShipList().get(i).getPos()[0][j]][playground.getShipList().get(i).getPos()[1][j]].getBackground().equals(Color.ORANGE)){
+                    destroyed = false;
                 }
             }
             if (destroyed){
-                for (int j = 0; j < shipList.get(i).getSize(); j++) {
-                    playground.getPlayground()[shipList.get(i).getPos()[0][j]][shipList.get(i).getPos()[1][j]].setBackground(Color.RED);
+                for (int j = 0; j < playground.getShipList().get(i).getSize(); j++) {
+                    playground.getPlayground()[playground.getShipList().get(i).getPos()[0][j]][playground.getShipList().get(i).getPos()[1][j]].setBackground(Color.RED);
                 }
-                shipList.remove(i);
+                playground.getShipList().remove(i);
             }
         }
         for (int i = 0; i < playground.getPlayground().length; i++) {
@@ -148,7 +157,7 @@ public class Game {
         }
     }
     public void hit(int x, int y) {
-        for (Ship ship : shipList) {
+        for (Ship ship : playground.getShipList()) {
             for (int j = 0; j < ship.getSize(); j++) {
                 if (ship.getPos()[0][j] == x && ship.getPos()[1][j] == y) {
                     playground.getPlayground()[ship.getPos()[0][j]][ship.getPos()[1][j]].setBackground(Color.ORANGE);
@@ -159,5 +168,11 @@ public class Game {
             }
         }
         playground.getPlayground()[x][y].setBackground(Color.WHITE);
+    }
+    public void switchPlayground(Playground playground){
+        this.playground = playground;
+    }
+    public void switchEnemyPlayground(Playground playground){
+        this.enemyPlayground = playground;
     }
 }

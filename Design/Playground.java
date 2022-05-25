@@ -1,11 +1,16 @@
 package Design;
 
+import Game.Ship;
+
 import javax.swing.*;
 import java.awt.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Playground {
 
     private final JButton [][] playground = new JButton[10][10];
+    private final List<Ship> shipList = new ArrayList<>();
     private final Color waterColor = new Color(80, 150, 255);
     private final Color shipColor = new Color(0,0,0);
 
@@ -24,6 +29,10 @@ public class Playground {
 
     public Color getShipColor(){
         return shipColor;
+    }
+
+    public List<Ship> getShipList(){
+        return shipList;
     }
 
     public boolean hasNeighbor(int x, int y, Color color) {
@@ -144,5 +153,18 @@ public class Playground {
                 jButton.setEnabled(true);
             }
         }
+    }
+    public Playground copyPlayground(Playground playground) {
+        Playground p = new Playground();
+        for(int i=0;i<this.playground.length;i++) {
+            for(int j=0;j<this.playground[i].length;j++) {
+                p.getPlayground()[i][j].setBackground(playground.getPlayground()[i][j].getBackground());
+            }
+        }
+        System.out.println(shipList.size());
+        for (int i=0;i<=shipList.size();i++) {
+            p.getShipList().add(playground.getShipList().get(i));
+        }
+        return p;
     }
 }

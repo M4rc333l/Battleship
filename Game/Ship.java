@@ -15,4 +15,8 @@ public class Ship {
     public int[][] getPos() {
         return pos;
     }
+    @Override
+    public String toString(){
+        return "Size: " + size;
+    }
 }
