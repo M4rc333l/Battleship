@@ -6,8 +6,8 @@ import RMI.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.util.ArrayList;
-import java.util.List;
+import java.rmi.NotBoundException;
+import java.rmi.RemoteException;
 
 public class Game {
 
@@ -70,6 +70,7 @@ public class Game {
                                 }
                             }
                             else if (turn == -1) {
+                         //       playground auf Client 2 enemyplayground
                                 playground.clear();
                                 turn--;
                             }
