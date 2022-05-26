@@ -154,23 +154,31 @@ public class Playground {
             }
         }
     }
-    public Playground copyPlayground(Playground playground) {
+    public Playground copyPlayground(Playground playground, boolean duplicate) {
         Playground p = new Playground();
         for(int i=0;i<this.playground.length;i++) {
             for(int j=0;j<this.playground[i].length;j++) {
-                p.getPlayground()[i][j].setBackground(playground.getPlayground()[i][j].getBackground());
+                if(duplicate){
+                    p.getPlayground()[i][j].setBackground(playground.getPlayground()[i][j].getBackground());
+                }
+                else{
+                    if(playground.getPlayground()[i][j].getBackground().equals(shipColor)) {
+                        p.getPlayground()[i][j].setBackground(shipColor);
+                    }
+                }
             }
         }
-        System.out.println(shipList.size());
-        for (int i=0;i<=shipList.size();i++) {
-            p.getShipList().add(playground.getShipList().get(i));
+        for (int i=0;i<playground.getShipList().size();i++) {
+            if(playground.getShipList().size()>0) {
+                p.getShipList().add(playground.getShipList().get(i));
+            }
         }
         return p;
     }
     public void enabled(boolean enable){
-        for(int i=0;i<this.playground.length;i++) {
-            for(int j=0;j<this.playground[i].length;j++) {
-                playground[i][j].setEnabled(enable);
+        for (JButton[] jButtons : this.playground) {
+            for (JButton jButton : jButtons) {
+                jButton.setEnabled(enable);
             }
         }
     }

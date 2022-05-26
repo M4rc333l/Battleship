@@ -13,6 +13,8 @@ public class Server extends UnicastRemoteObject implements BattleshipServer {
 
     private Playground p1 = new Playground();
     private Playground p2 = new Playground();
+    private boolean hostTurn = true;
+
     public Server() throws RemoteException {
         super();
     }
@@ -21,27 +23,31 @@ public class Server extends UnicastRemoteObject implements BattleshipServer {
         Registry registry = LocateRegistry.createRegistry(1099);
         registry.rebind("BattleshipServer", server);
         System.out.println("Server ready");
-        server.method(true);
+        server.game(true);
     }
     @Override
-    public String method(boolean host) throws RemoteException {
-        Game game = new Game();
+    public boolean getHostTurn(){
+        return hostTurn;
+    }
+    @Override
+    public void changeHostTurn(){
+        hostTurn = !hostTurn;
+    }
+    @Override
+    public String game(boolean host) throws RemoteException {
+        Game game = new Game(this);
         game.game(host);
         return "Yes";
     }
-    public void start() throws RemoteException {
-
-    }
-    public int zahl() throws RemoteException{
-        return 15;
-    }
-
     @Override
-    public Playground getPlayground() throws RemoteException {
-        return p1;
+    public Playground getPlayground(int p) throws RemoteException {
+        if(p==1) return p1;
+        if(p==2) return p2;
+        return null;
     }
     @Override
-    public void sendPlayground(Playground playground){
-        p1 = playground;
+    public void sendPlayground(Playground playground, int p){
+        if(p==1) p1 = playground;
+        if(p==2) p2 = playground;
     }
 }

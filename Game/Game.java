@@ -3,12 +3,18 @@ package Game;
 import Design.*;
 import RMI.*;
 
-import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.rmi.RemoteException;
 
 public class Game {
+
+    private final Server server;
+
+    public Game(Server server){
+        this.server = server;
+    }
 
     private int turn = 7;
     private final BattleshipFrame frame = new BattleshipFrame();
@@ -22,8 +28,6 @@ public class Game {
         frame.intialGUI(10, playground);
         frame.intialGUI(21, enemyPlayground);
         enemyPlayground.enabled(false);
-
-        System.out.println(host);
 
         final int[] zaehler = {0};
         final int[] x1 = {0};
@@ -63,41 +67,77 @@ public class Game {
                                     else playground.disableNotPlaceable(size - 1);
                                     zaehler[0] = 0;
                                     turn--;
-                                    enemyPlayground = enemyPlayground.copyPlayground(playground);
-                                    frame.intialGUI(21, enemyPlayground);
-                                }
-                            }
-                            else if (turn == -1) {
-                         //       playground auf Client 2 enemyplayground
-                                playground.clear();
-                                turn--;
-                            }
-                            else if (turn > -1000) {
-                                if(host){
-                                    System.out.println("ICH BIN HOST");
-                                    playground.getPlayground()[finalI][finalJ].setEnabled(false);
-                                    hit(finalI, finalJ, playground);
-                                    if (playground.getShipList().isEmpty()) {
-                                        turn = -1000;
+                                    if(turn == -1) {
+                                        enemyPlayground = enemyPlayground.copyPlayground(playground, false);
+                                        frame.intialGUI(21, enemyPlayground);
                                     }
                                 }
-                                else if(!host){
-                                    System.out.println("ICH BIN CLIENT");
+                            } else if (turn == -1) {
+                                if (host && server.getHostTurn()) {
+                                    server.sendPlayground(enemyPlayground, 1);
+                                    server.changeHostTurn();
+                                    turn--;
+                                    System.out.println("Server playground kopiert");
+                                } else if(!(host || server.getHostTurn())) {
+                                    server.sendPlayground(enemyPlayground, 2);
+                                    server.changeHostTurn();
+                                    turn--;
+                                    System.out.println("Client playground kopiert");
+                                }
+                                //playground.clear();
+                            } else if (turn == -2) {
+                                if (host && server.getHostTurn()) {
+                                    try {
+                                        playground = playground.copyPlayground(server.getPlayground(2), false);
+                                        server.changeHostTurn();
+                                        System.out.println("Client playground auf Server kopiert");
+                                    } catch (RemoteException ex) {
+                                        ex.printStackTrace();
+                                    }
+                                    turn--;
+                                } else if (!(host || server.getHostTurn())) {
+                                    try {
+                                        playground = playground.copyPlayground(server.getPlayground(1), false);
+                                        server.changeHostTurn();
+                                        System.out.println("Server playground auf Client kopiert");
+                                    } catch (RemoteException ex) {
+                                        ex.printStackTrace();
+                                    }
+                                    turn--;
+                                }
+                                frame.intialGUI(10, playground);
+                                playground.enabled(true);
+                            } else if (turn == -3) {
+                                if (host && server.getHostTurn()) {
+                                    server.sendPlayground(playground, 2);
+                                    try {
+                                        enemyPlayground = enemyPlayground.copyPlayground(server.getPlayground(1), true);
+                                    } catch (RemoteException ex) {
+                                        ex.printStackTrace();
+                                    }
+                                    server.changeHostTurn();
                                     playground.getPlayground()[finalI][finalJ].setEnabled(false);
                                     hit(finalI, finalJ, playground);
-                                    if (playground.getShipList().isEmpty()) {
-                                        turn = -1000;
+                                } else if(!(host || server.getHostTurn())){
+                                    server.sendPlayground(playground, 1);
+                                    try {
+                                        enemyPlayground = enemyPlayground.copyPlayground(server.getPlayground(2), true);
+                                    } catch (RemoteException ex) {
+                                        ex.printStackTrace();
                                     }
+                                    server.changeHostTurn();
+                                    playground.getPlayground()[finalI][finalJ].setEnabled(false);
+                                    hit(finalI, finalJ, playground);
                                 }
-                            }
-                            else {
-                                /*try {
-                                    client.sendPlayground(playground);
-                                    enemyPlayground = enemyPlayground.copyPlayground(client.getPlayground());
-                                    frame.intialGUI(21, enemyPlayground);
-                                } catch (RemoteException ex) {
-                                    ex.printStackTrace();
-                                }*/
+                                enemyPlayground.enabled(false);
+                                playground.enabled((true));
+                                frame.intialGUI(21, enemyPlayground);
+
+                                if (playground.getShipList().isEmpty()) {
+                                    turn = -1000;
+                                    if(host) System.out.println("HOST GEWONNEN");
+                                    if(!host) System.out.println("CLIENT GEWONNEN");
+                                }
                             }
                         }
                     }
@@ -168,15 +208,12 @@ public class Game {
                     shipDestroyed();
                     return;
                 }
-                System.out.println();
             }
         }
         playground.getPlayground()[x][y].setBackground(Color.WHITE);
     }
-    public void switchPlayground(Playground playground){
-        this.playground = playground;
-    }
-    public void switchEnemyPlayground(Playground playground){
-        this.enemyPlayground = playground;
-    }
+    /*public void refreshGUI() {
+        frame.intialGUI(10, playground);
+        frame.intialGUI(21, enemyPlayground);
+    }*/
 }
