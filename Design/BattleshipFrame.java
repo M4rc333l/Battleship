@@ -14,7 +14,7 @@ public class BattleshipFrame extends JFrame {
         setLayout(new GridBagLayout());
     }
 
-    public void intialGUI(int size, Playground playground) {
+    public void initialGUI(int size, Playground playground) {
         constraints.insets = new Insets(6, 6, 6, 6);
         constraints.gridwidth = 1;
         constraints.gridheight = 1;

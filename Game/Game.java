@@ -25,8 +25,8 @@ public class Game {
 
     public void game(boolean host) {
 
-        frame.intialGUI(10, playground);
-        frame.intialGUI(21, enemyPlayground);
+        frame.initialGUI(10, playground);
+        frame.initialGUI(21, enemyPlayground);
         enemyPlayground.enabled(false);
 
         final int[] zaehler = {0};
@@ -69,7 +69,7 @@ public class Game {
                                     turn--;
                                     if(turn == -1) {
                                         enemyPlayground = enemyPlayground.copyPlayground(playground, false);
-                                        frame.intialGUI(21, enemyPlayground);
+                                        //frame.intialGUI(21, enemyPlayground);
                                     }
                                 }
                             } else if (turn == -1) {
@@ -83,8 +83,7 @@ public class Game {
                                     server.changeHostTurn();
                                     turn--;
                                     System.out.println("Client playground kopiert");
-                                }
-                                //playground.clear();
+                                } else if(!host && server.getHostTurn()) System.out.println("Bitte auf Server warten");
                             } else if (turn == -2) {
                                 if (host && server.getHostTurn()) {
                                     try {
@@ -95,7 +94,8 @@ public class Game {
                                         ex.printStackTrace();
                                     }
                                     turn--;
-                                } else if (!(host || server.getHostTurn())) {
+                                } else if(host && !server.getHostTurn()) System.out.println("Bitte auf Client warten");
+                                else if (!(host || server.getHostTurn())) {
                                     try {
                                         playground = playground.copyPlayground(server.getPlayground(1), false);
                                         server.changeHostTurn();
@@ -104,8 +104,7 @@ public class Game {
                                         ex.printStackTrace();
                                     }
                                     turn--;
-                                }
-                                frame.intialGUI(10, playground);
+                                } else if(!host && server.getHostTurn()) System.out.println("Bitte auf Server warten");
                                 playground.enabled(true);
                             } else if (turn == -3) {
                                 if (host && server.getHostTurn()) {
@@ -118,7 +117,8 @@ public class Game {
                                     server.changeHostTurn();
                                     playground.getPlayground()[finalI][finalJ].setEnabled(false);
                                     hit(finalI, finalJ, playground);
-                                } else if(!(host || server.getHostTurn())){
+                                } else if(host && !server.getHostTurn()) System.out.println("Bitte auf Client warten");
+                                else if(!(host || server.getHostTurn())) {
                                     server.sendPlayground(playground, 1);
                                     try {
                                         enemyPlayground = enemyPlayground.copyPlayground(server.getPlayground(2), true);
@@ -128,10 +128,10 @@ public class Game {
                                     server.changeHostTurn();
                                     playground.getPlayground()[finalI][finalJ].setEnabled(false);
                                     hit(finalI, finalJ, playground);
-                                }
+                                } else if(!host && server.getHostTurn()) System.out.println("Bitte auf Server warten");
+
                                 enemyPlayground.enabled(false);
                                 playground.enabled((true));
-                                frame.intialGUI(21, enemyPlayground);
 
                                 if (playground.getShipList().isEmpty()) {
                                     turn = -1000;
@@ -212,8 +212,4 @@ public class Game {
         }
         playground.getPlayground()[x][y].setBackground(Color.WHITE);
     }
-    /*public void refreshGUI() {
-        frame.intialGUI(10, playground);
-        frame.intialGUI(21, enemyPlayground);
-    }*/
 }
