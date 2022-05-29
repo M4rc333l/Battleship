@@ -12,4 +12,6 @@ public interface BattleshipServer extends Remote {
     void sendPlayground(Playground playground, int p) throws RemoteException;
     boolean getHostTurn() throws RemoteException;
     void changeHostTurn() throws  RemoteException;
+    boolean getWinner() throws RemoteException;
+    void changeWinner() throws RemoteException;
 }

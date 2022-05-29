@@ -14,6 +14,7 @@ public class Server extends UnicastRemoteObject implements BattleshipServer {
     private Playground p1 = new Playground();
     private Playground p2 = new Playground();
     private boolean hostTurn = true;
+    private boolean winner = false;
 
     public Server() throws RemoteException {
         super();
@@ -26,12 +27,20 @@ public class Server extends UnicastRemoteObject implements BattleshipServer {
         server.game(true);
     }
     @Override
-    public boolean getHostTurn(){
+    public boolean getHostTurn() {
         return hostTurn;
     }
     @Override
-    public void changeHostTurn(){
+    public void changeHostTurn() {
         hostTurn = !hostTurn;
+    }
+    @Override
+    public boolean getWinner() {
+        return winner;
+    }
+    @Override
+    public void changeWinner() {
+        winner = true;
     }
     @Override
     public String game(boolean host) throws RemoteException {

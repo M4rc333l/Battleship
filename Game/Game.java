@@ -17,6 +17,8 @@ public class Game {
     }
 
     private int turn = 7;
+    private boolean firstHit = true;
+    private boolean hit = false;
     private final BattleshipFrame frame = new BattleshipFrame();
 
     //Playground erstellen und Schiffliste erstellen
@@ -69,7 +71,7 @@ public class Game {
                                     turn--;
                                     if(turn == -1) {
                                         enemyPlayground = enemyPlayground.copyPlayground(playground, false);
-                                        //frame.intialGUI(21, enemyPlayground);
+                                        enemyPlayground.enabled(false);
                                     }
                                 }
                             } else if (turn == -1) {
@@ -108,35 +110,68 @@ public class Game {
                                 playground.enabled(true);
                             } else if (turn == -3) {
                                 if (host && server.getHostTurn()) {
-                                    server.sendPlayground(playground, 2);
-                                    try {
-                                        enemyPlayground = enemyPlayground.copyPlayground(server.getPlayground(1), true);
-                                    } catch (RemoteException ex) {
-                                        ex.printStackTrace();
+                                    if(server.getWinner()) {
+                                        System.out.println("Du hast leider verloren!");
+                                        turn = Integer.MIN_VALUE;
+                                    } else {
+                                        server.sendPlayground(playground, 2);
+                                        playground.getPlayground()[finalI][finalJ].setEnabled(false);
+                                        hit(finalI, finalJ, playground);
                                     }
-                                    server.changeHostTurn();
-                                    playground.getPlayground()[finalI][finalJ].setEnabled(false);
-                                    hit(finalI, finalJ, playground);
+                                    if(firstHit && !hit) firstHit = false;
+                                    else if(!firstHit){
+                                        try {
+                                            enemyPlayground = enemyPlayground.copyPlayground(server.getPlayground(1), true);
+                                        } catch (RemoteException ex) {
+                                            ex.printStackTrace();
+                                        }
+                                    }
+                                    if(hit) hit = false;
+                                    else server.changeHostTurn();
                                 } else if(host && !server.getHostTurn()) System.out.println("Bitte auf Client warten");
                                 else if(!(host || server.getHostTurn())) {
-                                    server.sendPlayground(playground, 1);
+                                    if(server.getWinner()) {
+                                        System.out.println("Du hast leider verloren!");
+                                        turn = Integer.MIN_VALUE;
+                                    } else {
+                                        server.sendPlayground(playground, 1);
+                                        playground.getPlayground()[finalI][finalJ].setEnabled(false);
+                                        hit(finalI, finalJ, playground);
+                                    }
                                     try {
                                         enemyPlayground = enemyPlayground.copyPlayground(server.getPlayground(2), true);
                                     } catch (RemoteException ex) {
                                         ex.printStackTrace();
                                     }
-                                    server.changeHostTurn();
-                                    playground.getPlayground()[finalI][finalJ].setEnabled(false);
-                                    hit(finalI, finalJ, playground);
+                                    if(hit) hit = false;
+                                    else server.changeHostTurn();
                                 } else if(!host && server.getHostTurn()) System.out.println("Bitte auf Server warten");
 
                                 enemyPlayground.enabled(false);
-                                playground.enabled((true));
+                                //if(!(host || server.getHostTurn()) || (host && server.getHostTurn()))
+                                    playground.enabled((true));
 
                                 if (playground.getShipList().isEmpty()) {
-                                    turn = -1000;
-                                    if(host) System.out.println("HOST GEWONNEN");
-                                    if(!host) System.out.println("CLIENT GEWONNEN");
+                                    turn = Integer.MIN_VALUE;
+                                    if(host) {
+                                        System.out.println("HOST GEWONNEN");
+                                        server.changeHostTurn();
+                                        server.changeWinner();
+                                        try {
+                                            enemyPlayground = enemyPlayground.copyPlayground(server.getPlayground(1), true);
+                                        } catch (RemoteException ex) {
+                                            ex.printStackTrace();
+                                        }
+                                    } else {
+                                        System.out.println("CLIENT GEWONNEN");
+                                        server.changeHostTurn();
+                                        server.changeWinner();
+                                        try {
+                                            enemyPlayground = enemyPlayground.copyPlayground(server.getPlayground(2), true);
+                                        } catch (RemoteException ex) {
+                                            ex.printStackTrace();
+                                        }
+                                    }
                                 }
                             }
                         }
@@ -195,7 +230,7 @@ public class Game {
             for (int j = 0; j < playground.getPlayground()[i].length; j++) {
                 if(playground.hasNeighbor(i,j,Color.RED) && !playground.getPlayground()[i][j].getBackground().equals(Color.RED)){
                         playground.getPlayground()[i][j].setEnabled(false);
-                        playground.getPlayground()[i][j].setBackground(Color.YELLOW);
+                        playground.getPlayground()[i][j].setBackground(Color.GRAY);
                 }
             }
         }
@@ -205,6 +240,7 @@ public class Game {
             for (int j = 0; j < ship.getSize(); j++) {
                 if (ship.getPos()[0][j] == x && ship.getPos()[1][j] == y) {
                     playground.getPlayground()[ship.getPos()[0][j]][ship.getPos()[1][j]].setBackground(Color.ORANGE);
+                    hit = true;
                     shipDestroyed();
                     return;
                 }

@@ -140,7 +140,7 @@ public class Playground {
                 } catch (ArrayIndexOutOfBoundsException ignored) {
                 }
                 if (!(placeable || playground[i][j].getBackground().equals(shipColor) || playground[i][j].getBackground().equals(Color.GRAY))) {
-                    playground[i][j].setBackground(Color.GREEN);
+                    playground[i][j].setBackground(Color.GRAY);
                     playground[i][j].setEnabled(false);
                 }
             }
@@ -153,12 +153,12 @@ public class Playground {
                 jButton.setEnabled(true);
             }
         }
-        for(int i=this.shipList.size()-1;i>=0;i--){
+        for(int i=shipList.size()-1;i>=0;i--){
             shipList.remove(i);
         }
     }
     public Playground copyPlayground(Playground playground, boolean duplicate) {
-        this.clear();
+        clear();
         for(int i=0;i<this.playground.length;i++) {
             for(int j=0;j<this.playground[i].length;j++) {
                 if(!duplicate) {
@@ -178,7 +178,8 @@ public class Playground {
     public void enabled(boolean enable){
         for (JButton[] jButtons : this.playground) {
             for (JButton jButton : jButtons) {
-                jButton.setEnabled(enable);
+                if(jButton.getBackground().equals(waterColor) && enable) jButton.setEnabled(true);
+                else if(!enable) jButton.setEnabled(false);
             }
         }
     }
