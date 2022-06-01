@@ -49,6 +49,10 @@ public class Server extends UnicastRemoteObject implements BattleshipServer {
         return "Yes";
     }
     @Override
+    public Game getGame() throws RemoteException {
+        return new Game(this);
+    }
+    @Override
     public Playground getPlayground(int p) throws RemoteException {
         if(p==1) return p1;
         if(p==2) return p2;

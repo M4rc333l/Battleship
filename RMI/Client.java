@@ -15,9 +15,10 @@ public class Client {
         server = (BattleshipServer) registry.lookup("BattleshipServer");
     }
     public String method() throws RemoteException, NotBoundException {
-        //Game game = new Game((Server) server);
-        //game.game(false);
-        return server.game(false);
+        Game game = server.getGame();
+        game.game(false);
+        //return server.game(false);
+        return "";
     }
     public static void main(String[] args) throws RemoteException, NotBoundException {
         Client client = new Client("localhost", 1099);
