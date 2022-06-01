@@ -157,15 +157,15 @@ public class Playground {
             shipList.remove(i);
         }
     }
-    public Playground copyPlayground(Playground playground, boolean duplicate) {
+    public Playground copyPlayground(Playground playground, int mode) {
         clear();
         for(int i=0;i<this.playground.length;i++) {
             for(int j=0;j<this.playground[i].length;j++) {
-                if(!duplicate) {
+                if(mode == 1) {
                     if(playground.getPlayground()[i][j].getBackground().equals(shipColor)) {
                         this.getPlayground()[i][j].setBackground(playground.getPlayground()[i][j].getBackground());
                     }
-                } else this.getPlayground()[i][j].setBackground(playground.getPlayground()[i][j].getBackground());
+                } else if(mode == 2) this.getPlayground()[i][j].setBackground(playground.getPlayground()[i][j].getBackground());
             }
         }
         for (int i=0;i<playground.getShipList().size();i++) {

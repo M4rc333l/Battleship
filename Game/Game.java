@@ -36,6 +36,20 @@ public class Game {
         final int[] y1 = {0};
         final int[] x2 = {0};
         final int[] y2 = {0};
+
+        frame.getHostGameButton().addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+
+            }
+        });
+        frame.getJoinGameButton().addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+
+            }
+        });
+
         for (int i = 0; i < playground.getPlayground().length; i++) {
             for (int j = 0; j < playground.getPlayground()[i].length; j++) {
                 int finalI = i;
@@ -51,6 +65,11 @@ public class Game {
                                 if (turn == 2 || turn == 1 || turn == 0) size = 2;
 
                                 if (zaehler[0] == 0) {
+                                    frame.setText("Server playground kopiert");
+                                    frame.setText("Server playground kopiert");
+                                    frame.setText("Server playground kopiert");
+                                    frame.setText("Server playground kopiert");
+
                                     x1[0] = finalI;
                                     y1[0] = finalJ;
                                     playground.getPlayground()[finalI][finalJ].setEnabled(false);
@@ -70,7 +89,7 @@ public class Game {
                                     zaehler[0] = 0;
                                     turn--;
                                     if(turn == -1) {
-                                        enemyPlayground = enemyPlayground.copyPlayground(playground, false);
+                                        enemyPlayground = enemyPlayground.copyPlayground(playground, 1);
                                         enemyPlayground.enabled(false);
                                     }
                                 }
@@ -89,7 +108,7 @@ public class Game {
                             } else if (turn == -2) {
                                 if (host && server.getHostTurn()) {
                                     try {
-                                        playground = playground.copyPlayground(server.getPlayground(2), false);
+                                        playground = playground.copyPlayground(server.getPlayground(2), 1);
                                         server.changeHostTurn();
                                         System.out.println("Client playground auf Server kopiert");
                                     } catch (RemoteException ex) {
@@ -99,7 +118,7 @@ public class Game {
                                 } else if(host && !server.getHostTurn()) System.out.println("Bitte auf Client warten");
                                 else if (!(host || server.getHostTurn())) {
                                     try {
-                                        playground = playground.copyPlayground(server.getPlayground(1), false);
+                                        playground = playground.copyPlayground(server.getPlayground(1), 1);
                                         server.changeHostTurn();
                                         System.out.println("Server playground auf Client kopiert");
                                     } catch (RemoteException ex) {
@@ -121,7 +140,7 @@ public class Game {
                                     if(firstHit && !hit) firstHit = false;
                                     else if(!firstHit){
                                         try {
-                                            enemyPlayground = enemyPlayground.copyPlayground(server.getPlayground(1), true);
+                                            enemyPlayground = enemyPlayground.copyPlayground(server.getPlayground(1), 2);
                                         } catch (RemoteException ex) {
                                             ex.printStackTrace();
                                         }
@@ -139,7 +158,7 @@ public class Game {
                                         hit(finalI, finalJ, playground);
                                     }
                                     try {
-                                        enemyPlayground = enemyPlayground.copyPlayground(server.getPlayground(2), true);
+                                        enemyPlayground = enemyPlayground.copyPlayground(server.getPlayground(2), 2);
                                     } catch (RemoteException ex) {
                                         ex.printStackTrace();
                                     }
@@ -158,7 +177,7 @@ public class Game {
                                         server.changeHostTurn();
                                         server.changeWinner();
                                         try {
-                                            enemyPlayground = enemyPlayground.copyPlayground(server.getPlayground(1), true);
+                                            enemyPlayground = enemyPlayground.copyPlayground(server.getPlayground(1), 2);
                                         } catch (RemoteException ex) {
                                             ex.printStackTrace();
                                         }
@@ -167,7 +186,7 @@ public class Game {
                                         server.changeHostTurn();
                                         server.changeWinner();
                                         try {
-                                            enemyPlayground = enemyPlayground.copyPlayground(server.getPlayground(2), true);
+                                            enemyPlayground = enemyPlayground.copyPlayground(server.getPlayground(2), 2);
                                         } catch (RemoteException ex) {
                                             ex.printStackTrace();
                                         }
