@@ -16,7 +16,7 @@ public class Client {
         return server.game(false);
     }
     public static void main(String[] args) throws RemoteException, NotBoundException {
-        Client client = new Client("localhost", 1099);
+        Client client = new Client("26.197.80.44", 1099);
         System.out.println(client.method());
     }
 }
