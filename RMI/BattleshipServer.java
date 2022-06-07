@@ -1,19 +1,20 @@
 package RMI;
 
-import Design.*;
-import Game.Game;
-
-import java.rmi.NotBoundException;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 
 public interface BattleshipServer extends Remote {
-    String game(boolean host) throws RemoteException, NotBoundException;
-    Game getGame() throws RemoteException;
-    Playground getPlayground(int p) throws RemoteException;
-    void sendPlayground(Playground playground, int p) throws RemoteException;
+    void game(boolean host) throws Exception;
+    int getPos(int p, int pos) throws RemoteException;
+    void sendPos(int x, int y, int p) throws RemoteException;
+    void increaseCurrent() throws RemoteException;
+    void resetCurrent() throws RemoteException;
+    int getLength1() throws RemoteException;
+    int getLength2() throws RemoteException;
     boolean getHostTurn() throws RemoteException;
-    void changeHostTurn() throws  RemoteException;
+    void changeHostTurn() throws RemoteException;
     boolean getWinner() throws RemoteException;
     void changeWinner() throws RemoteException;
+    int getHit(int p, boolean x, int pos) throws RemoteException;
+    void sendHit(int x, int y, int p) throws RemoteException;
 }

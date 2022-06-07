@@ -146,19 +146,21 @@ public class Playground {
             }
         }
     }
-    public void clear(){
+    public void clear(boolean deleteList){
         for (JButton[] jButtons : playground) {
             for (JButton jButton : jButtons) {
                 jButton.setBackground(waterColor);
                 jButton.setEnabled(true);
             }
         }
-        for(int i=shipList.size()-1;i>=0;i--){
-            shipList.remove(i);
+        if(deleteList){
+            for(int i=shipList.size()-1;i>=0;i--){
+                shipList.remove(i);
+            }
         }
     }
     public Playground copyPlayground(Playground playground, int mode) {
-        clear();
+        clear(true);
         for(int i=0;i<this.playground.length;i++) {
             for(int j=0;j<this.playground[i].length;j++) {
                 if(mode == 1) {
@@ -169,9 +171,12 @@ public class Playground {
             }
         }
         for (int i=0;i<playground.getShipList().size();i++) {
-            if(playground.getShipList().size()>0) {
-                this.getShipList().add(playground.getShipList().get(i));
+            int[][] pos = new int[2][playground.getShipList().get(i).getSize()];
+            for(int j =0;j<playground.getShipList().get(i).getSize();j++){
+                pos[0][j] = playground.getShipList().get(i).getPos()[0][j];
+                pos[1][j] = playground.getShipList().get(i).getPos()[1][j];
             }
+            this.getShipList().add(new Ship(playground.getShipList().get(i).getSize(), pos));
         }
         return this;
     }
@@ -182,5 +187,15 @@ public class Playground {
                 else if(!enable) jButton.setEnabled(false);
             }
         }
+    }
+    public boolean shipsDestroyed(){
+        boolean destroyed = true;
+        for (Ship ship : shipList) {
+            if (!ship.isDestroyed()) {
+                destroyed = false;
+                break;
+            }
+        }
+        return destroyed;
     }
 }

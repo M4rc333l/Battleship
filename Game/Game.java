@@ -10,22 +10,23 @@ import java.rmi.RemoteException;
 
 public class Game {
 
-    private final Server server;
+    private final BattleshipServer server;
 
-    public Game(Server server){
+    public Game(BattleshipServer server){
         this.server = server;
     }
 
     private int turn = 7;
-    private boolean firstHit = true;
     private boolean hit = false;
-    private final BattleshipFrame frame = new BattleshipFrame();
+    private BattleshipFrame frame;
 
     //Playground erstellen und Schiffliste erstellen
-    private Playground playground = new Playground();
+    private final Playground playground = new Playground();
     private Playground enemyPlayground = new Playground();
 
     public void game(boolean host) {
+
+        frame = new BattleshipFrame();
 
         frame.initialGUI(10, playground);
         frame.initialGUI(21, enemyPlayground);
@@ -65,10 +66,6 @@ public class Game {
                                 if (turn == 2 || turn == 1 || turn == 0) size = 2;
 
                                 if (zaehler[0] == 0) {
-                                    frame.setText("Server playground kopiert");
-                                    frame.setText("Server playground kopiert");
-                                    frame.setText("Server playground kopiert");
-                                    frame.setText("Server playground kopiert");
 
                                     x1[0] = finalI;
                                     y1[0] = finalJ;
@@ -94,99 +91,91 @@ public class Game {
                                     }
                                 }
                             } else if (turn == -1) {
-                                if (host && server.getHostTurn()) {
-                                    server.sendPlayground(enemyPlayground, 1);
-                                    server.changeHostTurn();
-                                    turn--;
-                                    System.out.println("Server playground kopiert");
-                                } else if(!(host || server.getHostTurn())) {
-                                    server.sendPlayground(enemyPlayground, 2);
-                                    server.changeHostTurn();
-                                    turn--;
-                                    System.out.println("Client playground kopiert");
-                                } else if(!host && server.getHostTurn()) System.out.println("Bitte auf Server warten");
+                                try {
+                                    if (host && server.getHostTurn()) {
+                                        sendPlayground(1);
+
+                                        server.changeHostTurn();
+                                        turn--;
+                                        frame.setText("Server playground kopiert");
+                                    } else if(!(host || server.getHostTurn())) {
+                                        sendPlayground(2);
+                                        server.changeHostTurn();
+                                        turn--;
+                                        frame.setText("Client playground kopiert");
+                                    } else if(!host && server.getHostTurn()) frame.setText("Bitte auf Server warten");
+                                } catch (RemoteException ex) {
+                                    ex.printStackTrace();
+                                }
                             } else if (turn == -2) {
-                                if (host && server.getHostTurn()) {
-                                    try {
-                                        playground = playground.copyPlayground(server.getPlayground(2), 1);
+                                try {
+                                    if (host && server.getHostTurn()) {
+                                        getPlayground(2, playground);
                                         server.changeHostTurn();
-                                        System.out.println("Client playground auf Server kopiert");
-                                    } catch (RemoteException ex) {
-                                        ex.printStackTrace();
-                                    }
-                                    turn--;
-                                } else if(host && !server.getHostTurn()) System.out.println("Bitte auf Client warten");
-                                else if (!(host || server.getHostTurn())) {
-                                    try {
-                                        playground = playground.copyPlayground(server.getPlayground(1), 1);
+                                        frame.setText("Client playground auf Server kopiert");
+                                        turn--;
+                                    } else if(host && !server.getHostTurn()) frame.setText("Bitte auf Client warten");
+                                    else if (!(host || server.getHostTurn())) {
+                                        getPlayground(1, playground);
                                         server.changeHostTurn();
-                                        System.out.println("Server playground auf Client kopiert");
-                                    } catch (RemoteException ex) {
-                                        ex.printStackTrace();
-                                    }
-                                    turn--;
-                                } else if(!host && server.getHostTurn()) System.out.println("Bitte auf Server warten");
+                                        frame.setText("Server playground auf Client kopiert");
+                                        turn--;
+                                    } else if(!host && server.getHostTurn()) frame.setText("Bitte auf Server warten");
+                                } catch (RemoteException ex) {
+                                    ex.printStackTrace();
+                                }
                                 playground.enabled(true);
                             } else if (turn == -3) {
-                                if (host && server.getHostTurn()) {
-                                    if(server.getWinner()) {
-                                        System.out.println("Du hast leider verloren!");
-                                        turn = Integer.MIN_VALUE;
-                                    } else {
-                                        server.sendPlayground(playground, 2);
-                                        playground.getPlayground()[finalI][finalJ].setEnabled(false);
-                                        hit(finalI, finalJ, playground);
-                                    }
-                                    if(firstHit && !hit) firstHit = false;
-                                    else if(!firstHit){
-                                        try {
-                                            enemyPlayground = enemyPlayground.copyPlayground(server.getPlayground(1), 2);
-                                        } catch (RemoteException ex) {
-                                            ex.printStackTrace();
+                                try {
+                                    if (host && server.getHostTurn()) {
+                                        if(server.getWinner()) {
+                                            frame.setText("Du hast leider verloren! Spieler 2 hat gewonnen!");
+                                            turn = Integer.MIN_VALUE;
+                                        } else {
+                                            server.sendHit(finalI, finalJ, 1);
+                                            playground.getPlayground()[finalI][finalJ].setEnabled(false);
+                                            hit(finalI, finalJ, playground, true);
                                         }
-                                    }
-                                    if(hit) hit = false;
-                                    else server.changeHostTurn();
-                                } else if(host && !server.getHostTurn()) System.out.println("Bitte auf Client warten");
-                                else if(!(host || server.getHostTurn())) {
-                                    if(server.getWinner()) {
-                                        System.out.println("Du hast leider verloren!");
-                                        turn = Integer.MIN_VALUE;
-                                    } else {
-                                        server.sendPlayground(playground, 1);
-                                        playground.getPlayground()[finalI][finalJ].setEnabled(false);
-                                        hit(finalI, finalJ, playground);
-                                    }
-                                    try {
-                                        enemyPlayground = enemyPlayground.copyPlayground(server.getPlayground(2), 2);
-                                    } catch (RemoteException ex) {
-                                        ex.printStackTrace();
-                                    }
-                                    if(hit) hit = false;
-                                    else server.changeHostTurn();
-                                } else if(!host && server.getHostTurn()) System.out.println("Bitte auf Server warten");
-
+                                        getHits(2, enemyPlayground);
+                                        if(hit) hit = false;
+                                        else server.changeHostTurn();
+                                    } else if(host && !server.getHostTurn()) frame.setText("Bitte auf Client warten");
+                                    else if(!(host || server.getHostTurn())) {
+                                        if(server.getWinner()) {
+                                            frame.setText("Du hast leider verloren! Spieler 1 hat gewonnen");
+                                            turn = Integer.MIN_VALUE;
+                                        } else {
+                                            server.sendHit(finalI, finalJ, 2);
+                                            playground.getPlayground()[finalI][finalJ].setEnabled(false);
+                                            hit(finalI, finalJ, playground, true);
+                                            getHits(1, enemyPlayground);
+                                        }
+                                        if(hit) hit = false;
+                                        else server.changeHostTurn();
+                                    } else if(!host && server.getHostTurn()) frame.setText("Bitte auf Server warten");
+                                } catch (RemoteException ex) {
+                                    ex.printStackTrace();
+                                }
                                 enemyPlayground.enabled(false);
-                                //if(!(host || server.getHostTurn()) || (host && server.getHostTurn()))
-                                    playground.enabled((true));
-
-                                if (playground.getShipList().isEmpty()) {
+                                playground.enabled((true));
+                                if (playground.shipsDestroyed()) {
                                     turn = Integer.MIN_VALUE;
                                     if(host) {
-                                        System.out.println("HOST GEWONNEN");
-                                        server.changeHostTurn();
-                                        server.changeWinner();
+                                        frame.setText("HOST GEWONNEN");
                                         try {
-                                            enemyPlayground = enemyPlayground.copyPlayground(server.getPlayground(1), 2);
+                                            server.changeHostTurn();
+                                            server.changeWinner();
+                                            getHits(2, enemyPlayground);
+
                                         } catch (RemoteException ex) {
                                             ex.printStackTrace();
                                         }
                                     } else {
-                                        System.out.println("CLIENT GEWONNEN");
-                                        server.changeHostTurn();
-                                        server.changeWinner();
+                                        frame.setText("CLIENT GEWONNEN");
                                         try {
-                                            enemyPlayground = enemyPlayground.copyPlayground(server.getPlayground(2), 2);
+                                            server.changeHostTurn();
+                                            server.changeWinner();
+                                            getHits(1, enemyPlayground);
                                         } catch (RemoteException ex) {
                                             ex.printStackTrace();
                                         }
@@ -230,7 +219,7 @@ public class Game {
         }
         playground.getShipList().add(new Ship(size,pos));
     }
-    public void shipDestroyed() {
+    public void shipDestroyed(Playground playground) {
         for (int i = 0; i < playground.getShipList().size(); i++) {
             boolean destroyed = true;
             for (int j = 0; j < playground.getShipList().get(i).getSize(); j++) {
@@ -238,11 +227,11 @@ public class Game {
                     destroyed = false;
                 }
             }
-            if (destroyed){
+            if(destroyed) playground.getShipList().get(i).setDestroyed();
+            if (playground.getShipList().get(i).isDestroyed()){
                 for (int j = 0; j < playground.getShipList().get(i).getSize(); j++) {
                     playground.getPlayground()[playground.getShipList().get(i).getPos()[0][j]][playground.getShipList().get(i).getPos()[1][j]].setBackground(Color.RED);
                 }
-                playground.getShipList().remove(i);
             }
         }
         for (int i = 0; i < playground.getPlayground().length; i++) {
@@ -254,17 +243,45 @@ public class Game {
             }
         }
     }
-    public void hit(int x, int y, Playground playground) {
+    public void hit(int x, int y, Playground playground, boolean disable) {
         for (Ship ship : playground.getShipList()) {
             for (int j = 0; j < ship.getSize(); j++) {
                 if (ship.getPos()[0][j] == x && ship.getPos()[1][j] == y) {
                     playground.getPlayground()[ship.getPos()[0][j]][ship.getPos()[1][j]].setBackground(Color.ORANGE);
-                    hit = true;
-                    shipDestroyed();
+                    if(disable) hit = true;
+                    shipDestroyed(playground);
                     return;
                 }
             }
         }
         playground.getPlayground()[x][y].setBackground(Color.WHITE);
+    }
+    public void sendPlayground(int p) throws RemoteException {
+        for(int i = 0; i<enemyPlayground.getShipList().size();i++){
+            for(int j = 0; j<enemyPlayground.getShipList().get(i).getSize();j++){
+                server.sendPos(enemyPlayground.getShipList().get(i).getPos()[0][j], enemyPlayground.getShipList().get(i).getPos()[1][j], p);
+                server.increaseCurrent();
+            }
+        }
+        server.resetCurrent();
+    }
+    public void getPlayground(int p, Playground playground) throws RemoteException {
+        for(int i = 0; i<playground.getShipList().size();i++){
+            for(int j = 0; j<playground.getShipList().get(i).getSize();j++){
+                playground.getShipList().get(i).getPos()[0][j] = server.getPos(p, 0);
+                playground.getShipList().get(i).getPos()[1][j] = server.getPos(p, 1);
+                server.increaseCurrent();
+            }
+        }
+        playground.clear(false);
+        server.resetCurrent();
+    }
+    public void getHits(int p, Playground playground) throws RemoteException {
+        int count = -1;
+        if(p==1) count = server.getLength1();
+        if(p==2) count = server.getLength2();
+        for(int i =0;i<count;i++){
+                hit(server.getHit(p, true, i), server.getHit(p, false, i), playground, false);
+        }
     }
 }
