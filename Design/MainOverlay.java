@@ -34,7 +34,6 @@ public class MainOverlay {
         JButton hostButton = new JButton("Host");
         JButton connectionButton = new JButton("Connect");
 
-
         constraints.fill = GridBagConstraints.HORIZONTAL;
         constraints.insets = new Insets(4,4,4,4);
         constraints.gridx = 0;
@@ -43,7 +42,6 @@ public class MainOverlay {
         constraints.gridx = 0;
         constraints.gridy = 1;
         connectionframe.getContentPane().add(portLabel,constraints);
-
 
         constraints.gridx = 1;
         constraints.gridy = 4;
@@ -63,9 +61,8 @@ public class MainOverlay {
 
         hostButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                BattleshipServer server = null;
                 try {
-                    server = new Server();
+                    BattleshipServer server = new Server();
                     Registry registry = LocateRegistry.createRegistry(Integer.parseInt(portTextf.getText()));
                     registry.rebind("BattleshipServer", server);
                     System.out.println("Server ready");
@@ -81,7 +78,8 @@ public class MainOverlay {
             public void actionPerformed(ActionEvent e) {
                 if (!ipTextf.equals("") && !portTextf.equals("")){
                     try {
-                        Client client = new Client(ipTextf.getText(), Integer.parseInt(portTextf.getText()));
+                        String ip = ipTextf.getText();
+                        Client client = new Client(ip, Integer.parseInt(portTextf.getText()));
                         System.out.println(client.method());
 
                     } catch (RemoteException ex) {
@@ -93,10 +91,6 @@ public class MainOverlay {
             }
         });
     }
-
-
-
-
     public String getIp() {
         return ip;
     }
