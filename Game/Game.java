@@ -88,6 +88,7 @@ public class Game {
                                         } catch (RemoteException ex) {
                                             ex.printStackTrace();
                                         }
+                                        frame.getStartButton().setEnabled(true);
                                     }
                                 }
                             } /*else if (turn == -1) {
@@ -186,23 +187,25 @@ public class Game {
                 });
                 frame.getStartButton().addActionListener(new ActionListener() {
                     public void actionPerformed(ActionEvent e) {
-                        try {
-                            if (host && server.getHostTurn()) {
-                                getPlayground(2, playground);
-                                server.changeHostTurn();
-                                frame.setText("Client playground auf Server kopiert");
-                                turn--;
-                            } else if(host && !server.getHostTurn()) frame.setText("Bitte auf Client warten");
-                            else if (!(host || server.getHostTurn())) {
-                                getPlayground(1, playground);
-                                server.changeHostTurn();
-                                frame.setText("Server playground auf Client kopiert");
-                                turn--;
-                            } else if(!host && server.getHostTurn()) frame.setText("Bitte auf Server warten");
-                        } catch (RemoteException ex) {
-                            ex.printStackTrace();
+                        if(frame.getStartButton().isEnabled()){
+                            try {
+                                if (host && server.getHostTurn()) {
+                                    getPlayground(2, playground);
+                                    server.changeHostTurn();
+                                    frame.setText("Client playground auf Server kopiert");
+                                    turn--;
+                                } else if(host && !server.getHostTurn()) frame.setText("Bitte auf Client warten");
+                                else if (!(host || server.getHostTurn())) {
+                                    getPlayground(1, playground);
+                                    server.changeHostTurn();
+                                    frame.setText("Server playground auf Client kopiert");
+                                    turn--;
+                                } else if(!host && server.getHostTurn()) frame.setText("Bitte auf Server warten");
+                            } catch (RemoteException ex) {
+                                ex.printStackTrace();
+                            }
+                            playground.enabled(true);
                         }
-                        playground.enabled(true);
                     }
                 });
             }

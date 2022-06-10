@@ -36,6 +36,7 @@ public class BattleshipFrame extends JFrame {
         add(pCenter, CENTER);
         add(pSouth, BorderLayout.SOUTH);
         add(pWest, BorderLayout.WEST);
+        startButton.setEnabled(false);
         setVisible(true);
     }
     public void setText(String text){
