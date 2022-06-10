@@ -81,9 +81,11 @@ public class Game {
                                             if (host) {
                                                 sendPlayground(1);
                                                 frame.setText("Server playground kopiert");
+                                                server.setHostCopy();
                                             } else if(!host) {
                                                 sendPlayground(2);
                                                 frame.setText("Client playground kopiert");
+                                                server.setClientCopy();
                                             }
                                         } catch (RemoteException ex) {
                                             ex.printStackTrace();
@@ -187,20 +189,18 @@ public class Game {
                 });
                 frame.getStartButton().addActionListener(new ActionListener() {
                     public void actionPerformed(ActionEvent e) {
-                        if(frame.getStartButton().isEnabled()){
+                        if(frame.getStartButton().isEnabled()) {
                             try {
-                                if (host && server.getHostTurn()) {
+                                if (host && server.getClientCopy()) {
                                     getPlayground(2, playground);
-                                    server.changeHostTurn();
                                     frame.setText("Client playground auf Server kopiert");
                                     turn--;
-                                } else if(host && !server.getHostTurn()) frame.setText("Bitte auf Client warten");
-                                else if (!(host || server.getHostTurn())) {
+                                }
+                                else if (!(host || server.getHostCopy())) {
                                     getPlayground(1, playground);
-                                    server.changeHostTurn();
                                     frame.setText("Server playground auf Client kopiert");
                                     turn--;
-                                } else if(!host && server.getHostTurn()) frame.setText("Bitte auf Server warten");
+                                }
                             } catch (RemoteException ex) {
                                 ex.printStackTrace();
                             }

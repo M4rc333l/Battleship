@@ -72,6 +72,8 @@ public class MainOverlay {
                 } catch (Exception ex) {
                     ex.printStackTrace();
                 }
+                connectionframe.setVisible(false);
+                connectionframe.dispose();
             }
         });
         connectionButton.addActionListener(new ActionListener() {
@@ -88,6 +90,8 @@ public class MainOverlay {
                         System.out.println("Verbindung nicht möglich");
                     }
                 }
+                connectionframe.setVisible(false);
+                connectionframe.dispose();
             }
         });
     }

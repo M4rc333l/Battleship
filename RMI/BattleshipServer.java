@@ -17,4 +17,8 @@ public interface BattleshipServer extends Remote {
     void changeWinner() throws RemoteException;
     int getHit(int p, boolean x, int pos) throws RemoteException;
     void sendHit(int x, int y, int p) throws RemoteException;
+    boolean getHostCopy() throws RemoteException;
+    boolean getClientCopy() throws RemoteException;
+    void setHostCopy() throws RemoteException;
+    void setClientCopy() throws RemoteException;
 }

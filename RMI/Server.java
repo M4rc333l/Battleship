@@ -12,6 +12,8 @@ import java.util.List;
 public class Server extends UnicastRemoteObject implements BattleshipServer {
 
     private boolean hostTurn = true;
+    private boolean hostCopy = false;
+    private boolean clientCopy = false;
     private boolean winner = false;
     private final int[][] posList1 = new int[2][26];
     private final int[][] posList2 = new int[2][26];
@@ -24,6 +26,22 @@ public class Server extends UnicastRemoteObject implements BattleshipServer {
 
     public Server() throws RemoteException {
         super();
+    }
+    @Override
+    public boolean getHostCopy() {
+        return hostCopy;
+    }
+    @Override
+    public boolean getClientCopy() {
+        return clientCopy;
+    }
+    @Override
+    public void setHostCopy(){
+        hostCopy = true;
+    }
+    @Override
+    public void setClientCopy(){
+        clientCopy = true;
     }
     @Override
     public boolean getHostTurn() {
