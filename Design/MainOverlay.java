@@ -14,11 +14,10 @@ import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 
 public class MainOverlay {
-    private String ip;
-    private String port;
+
     private JFrame connectionframe;
 
-    public MainOverlay(){
+    public MainOverlay() {
         connectionframe = new JFrame("Join Game");
         connectionframe.setSize(300,200);
         connectionframe.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -62,8 +61,9 @@ public class MainOverlay {
         hostButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 try {
+                    String text = portTextf.getText().replaceAll("\\s+", "");
                     BattleshipServer server = new Server();
-                    Registry registry = LocateRegistry.createRegistry(Integer.parseInt(portTextf.getText()));
+                    Registry registry = LocateRegistry.createRegistry(Integer.parseInt(text));
                     registry.rebind("BattleshipServer", server);
                     System.out.println("Server ready");
                     server.game(true);
@@ -78,29 +78,17 @@ public class MainOverlay {
             public void actionPerformed(ActionEvent e) {
                 if (!ipTextf.equals("") && !portTextf.equals("")){
                     try {
-                        String ip = ipTextf.getText();
-                        Client client = new Client(ip, Integer.parseInt(portTextf.getText()));
+                        String textIP = ipTextf.getText().replaceAll("\\s+", "");
+                        String textPort = portTextf.getText().replaceAll("\\s+", "");
+                        Client client = new Client(textIP, Integer.parseInt(textPort));
                         System.out.println(client.method());
-
                     } catch (RemoteException ex) {
-                        ex.printStackTrace();
+                        System.out.println("Verbindung nicht möglich");
                     } catch (NotBoundException ex) {
-                        ex.printStackTrace();
+                        System.out.println("Verbindung nicht möglich");
                     }
                 }
             }
         });
-    }
-    public String getIp() {
-        return ip;
-    }
-    public void setIp(String ip) {
-        this.ip = ip;
-    }
-    public String getPort() {
-        return port;
-    }
-    public void setPort(String port) {
-        this.port = port;
     }
 }

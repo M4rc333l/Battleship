@@ -1,7 +1,13 @@
 package Design;
 
+import RMI.Client;
+
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.rmi.NotBoundException;
+import java.rmi.RemoteException;
 import java.util.ArrayList;
 
 import static java.awt.BorderLayout.CENTER;
@@ -11,8 +17,7 @@ public class BattleshipFrame extends JFrame {
     private final GridBagConstraints constraints = new GridBagConstraints();
     private final Panel pCenter = new Panel();
     private final JTextArea chat = new JTextArea();
-    private final JButton hostGame = new JButton("Host Game");
-    private final JButton joinGame = new JButton("Join Game");
+    private final JButton startButton = new JButton("Start");
     private ArrayList<String> chatList = new ArrayList<>();
 
     public BattleshipFrame() {
@@ -21,8 +26,7 @@ public class BattleshipFrame extends JFrame {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLayout(new BorderLayout());
         Panel pWest = new Panel();
-        pWest.add(hostGame, 0);
-        pWest.add(joinGame, 1);
+        pWest.add(startButton, 0);
         Panel pSouth = new Panel();
         chat.setDisabledTextColor(Color.BLACK);
         chat.setPreferredSize(new Dimension(1000, 200));
@@ -33,12 +37,6 @@ public class BattleshipFrame extends JFrame {
         add(pSouth, BorderLayout.SOUTH);
         add(pWest, BorderLayout.WEST);
         setVisible(true);
-    }
-    public JButton getHostGameButton(){
-        return hostGame;
-    }
-    public JButton getJoinGameButton(){
-        return joinGame;
     }
     public void setText(String text){
         chatList.add(text);
@@ -70,5 +68,12 @@ public class BattleshipFrame extends JFrame {
             }
         }
         setVisible(true);
+    }
+    public JButton getStartButton(){
+        return startButton;
+    }
+    public void remove(){
+        setVisible(false);
+        remove();
     }
 }

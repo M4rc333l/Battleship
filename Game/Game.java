@@ -4,6 +4,8 @@ import Design.*;
 import RMI.*;
 
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.rmi.RemoteException;
@@ -37,19 +39,6 @@ public class Game {
         final int[] y1 = {0};
         final int[] x2 = {0};
         final int[] y2 = {0};
-
-        frame.getHostGameButton().addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-
-            }
-        });
-        frame.getJoinGameButton().addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-
-            }
-        });
 
         for (int i = 0; i < playground.getPlayground().length; i++) {
             for (int j = 0; j < playground.getPlayground()[i].length; j++) {
@@ -117,7 +106,7 @@ public class Game {
                                 } catch (RemoteException ex) {
                                     ex.printStackTrace();
                                 }
-                            } */else if (turn == -1) {
+                            } else if (turn == -1) {
                                 try {
                                     if (host && server.getHostTurn()) {
                                         getPlayground(2, playground);
@@ -135,7 +124,7 @@ public class Game {
                                     ex.printStackTrace();
                                 }
                                 playground.enabled(true);
-                            } else if (turn == -2) {
+                            } */else if (turn == -2) {
                                 try {
                                     if (host && server.getHostTurn()) {
                                         if(server.getWinner()) {
@@ -193,6 +182,27 @@ public class Game {
                                 }
                             }
                         }
+                    }
+                });
+                frame.getStartButton().addActionListener(new ActionListener() {
+                    public void actionPerformed(ActionEvent e) {
+                        try {
+                            if (host && server.getHostTurn()) {
+                                getPlayground(2, playground);
+                                server.changeHostTurn();
+                                frame.setText("Client playground auf Server kopiert");
+                                turn--;
+                            } else if(host && !server.getHostTurn()) frame.setText("Bitte auf Client warten");
+                            else if (!(host || server.getHostTurn())) {
+                                getPlayground(1, playground);
+                                server.changeHostTurn();
+                                frame.setText("Server playground auf Client kopiert");
+                                turn--;
+                            } else if(!host && server.getHostTurn()) frame.setText("Bitte auf Server warten");
+                        } catch (RemoteException ex) {
+                            ex.printStackTrace();
+                        }
+                        playground.enabled(true);
                     }
                 });
             }
@@ -293,5 +303,10 @@ public class Game {
         for(int i =0;i<count;i++){
                 hit(server.getHit(p, true, i), server.getHit(p, false, i), playground, false);
         }
+    }
+    public void lostConnection() throws InterruptedException {
+        frame.setText("Verbindung zum Server verloren");
+        Thread.sleep(5000);
+        frame.remove();
     }
 }
