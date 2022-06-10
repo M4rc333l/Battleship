@@ -91,11 +91,9 @@ public class Game {
                                         try {
                                             if (host) {
                                                 sendPlayground(1);
-                                                server.changeHostTurn();
                                                 frame.setText("Server playground kopiert");
                                             } else if(!host) {
                                                 sendPlayground(2);
-                                                server.changeHostTurn();
                                                 frame.setText("Client playground kopiert");
                                             }
                                         } catch (RemoteException ex) {
@@ -137,7 +135,7 @@ public class Game {
                                     ex.printStackTrace();
                                 }
                                 playground.enabled(true);
-                            } else if (turn == -3) {
+                            } else if (turn == -2) {
                                 try {
                                     if (host && server.getHostTurn()) {
                                         if(server.getWinner()) {
