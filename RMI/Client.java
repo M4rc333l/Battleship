@@ -20,8 +20,4 @@ public class Client {
         game.game(false);
         return "started Client";
     }
-    public static void main(String[] args) throws RemoteException, NotBoundException {
-        Client client = new Client("localhost", 1099);
-        System.out.println(client.method());
-    }
 }
