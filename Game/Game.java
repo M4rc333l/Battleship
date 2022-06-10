@@ -4,10 +4,9 @@ import Design.*;
 import RMI.*;
 
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.IOException;
 import java.rmi.RemoteException;
 
 public class Game {
@@ -82,52 +81,18 @@ public class Game {
                                                 sendPlayground(1);
                                                 frame.setText("Server playground kopiert");
                                                 server.setHostCopy();
-                                            } else if(!host) {
+                                            } else {
                                                 sendPlayground(2);
                                                 frame.setText("Client playground kopiert");
                                                 server.setClientCopy();
                                             }
                                         } catch (RemoteException ex) {
-                                            ex.printStackTrace();
+                                            lostConnection();
                                         }
                                         frame.getStartButton().setEnabled(true);
                                     }
                                 }
-                            } /*else if (turn == -1) {
-                                try {
-                                    if (host && server.getHostTurn()) {
-                                        sendPlayground(1);
-                                        server.changeHostTurn();
-                                        turn--;
-                                        frame.setText("Server playground kopiert");
-                                    } else if(!(host || server.getHostTurn())) {
-                                        sendPlayground(2);
-                                        server.changeHostTurn();
-                                        turn--;
-                                        frame.setText("Client playground kopiert");
-                                    } else if(!host && server.getHostTurn()) frame.setText("Bitte auf Server warten");
-                                } catch (RemoteException ex) {
-                                    ex.printStackTrace();
-                                }
-                            } else if (turn == -1) {
-                                try {
-                                    if (host && server.getHostTurn()) {
-                                        getPlayground(2, playground);
-                                        server.changeHostTurn();
-                                        frame.setText("Client playground auf Server kopiert");
-                                        turn--;
-                                    } else if(host && !server.getHostTurn()) frame.setText("Bitte auf Client warten");
-                                    else if (!(host || server.getHostTurn())) {
-                                        getPlayground(1, playground);
-                                        server.changeHostTurn();
-                                        frame.setText("Server playground auf Client kopiert");
-                                        turn--;
-                                    } else if(!host && server.getHostTurn()) frame.setText("Bitte auf Server warten");
-                                } catch (RemoteException ex) {
-                                    ex.printStackTrace();
-                                }
-                                playground.enabled(true);
-                            } */else if (turn == -2) {
+                            } else if (turn == -2) {
                                 try {
                                     if (host && server.getHostTurn()) {
                                         if(server.getWinner()) {
@@ -156,7 +121,7 @@ public class Game {
                                         else server.changeHostTurn();
                                     } else if(!host && server.getHostTurn()) frame.setText("Bitte auf Server warten");
                                 } catch (RemoteException ex) {
-                                    ex.printStackTrace();
+                                    lostConnection();
                                 }
                                 enemyPlayground.enabled(false);
                                 playground.enabled((true));
@@ -170,7 +135,7 @@ public class Game {
                                             getHits(2, enemyPlayground);
 
                                         } catch (RemoteException ex) {
-                                            ex.printStackTrace();
+                                            lostConnection();
                                         }
                                     } else {
                                         frame.setText("CLIENT GEWONNEN");
@@ -179,7 +144,7 @@ public class Game {
                                             server.changeWinner();
                                             getHits(1, enemyPlayground);
                                         } catch (RemoteException ex) {
-                                            ex.printStackTrace();
+                                            lostConnection();
                                         }
                                     }
                                 }
@@ -187,26 +152,24 @@ public class Game {
                         }
                     }
                 });
-                frame.getStartButton().addActionListener(new ActionListener() {
-                    public void actionPerformed(ActionEvent e) {
-                        if(frame.getStartButton().isEnabled()) {
-                            try {
-                                if (host && server.getClientCopy()) {
-                                    getPlayground(2, playground);
-                                    frame.setText("Client playground auf Server kopiert");
-                                    turn--;
-                                }
-                                else if (!(host || server.getHostCopy())) {
-                                    getPlayground(1, playground);
-                                    frame.setText("Server playground auf Client kopiert");
-                                    turn--;
-                                }
-                            } catch (RemoteException ex) {
-                                ex.printStackTrace();
+                frame.getStartButton().addActionListener(e -> {
+                    if(frame.getStartButton().isEnabled()) {
+                        try {
+                            if (host && server.getClientCopy()) {
+                                getPlayground(2, playground);
+                                frame.setText("Client playground auf Server kopiert");
+                                turn--;
                             }
-                            playground.enabled(true);
-                            frame.getStartButton().setEnabled(false);
+                            else if (!(host || !server.getHostCopy())) {
+                                getPlayground(1, playground);
+                                frame.setText("Server playground auf Client kopiert");
+                                turn--;
+                            }
+                        } catch (RemoteException ex) {
+                            lostConnection();
                         }
+                        playground.enabled(true);
+                        frame.getStartButton().setEnabled(false);
                     }
                 });
             }
@@ -308,9 +271,13 @@ public class Game {
                 hit(server.getHit(p, true, i), server.getHit(p, false, i), playground, false);
         }
     }
-    public void lostConnection() throws InterruptedException {
-        frame.setText("Verbindung zum Server verloren");
-        Thread.sleep(5000);
-        frame.remove();
+    public void lostConnection() {
+        try {
+            frame.setText("Verbindung zum Server verloren");
+            Thread.sleep(5000);
+            frame.dispose();
+        } catch(Exception e){
+            frame.setText("Verbindung verloren");
+        }
     }
 }

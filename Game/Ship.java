@@ -1,7 +1,12 @@
 package Game;
 
-public class Ship {
+import java.io.Serial;
+import java.io.Serializable;
 
+public class Ship implements Serializable {
+
+    @Serial
+    private static final long serialVersionUID = (long) (Math.random()*100000000000L);
     private final int size;
     private final int[][] pos;
     boolean destroyed = false;

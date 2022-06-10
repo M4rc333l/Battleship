@@ -6,8 +6,6 @@ import RMI.Server;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
@@ -15,7 +13,7 @@ import java.rmi.registry.Registry;
 
 public class MainOverlay {
 
-    private JFrame connectionframe;
+    private final JFrame connectionframe;
 
     public MainOverlay() {
         connectionframe = new JFrame("Join Game");
@@ -58,41 +56,33 @@ public class MainOverlay {
         connectionframe.getContentPane().add(portTextf,constraints);
         connectionframe.setVisible(true);
 
-        hostButton.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                try {
-                    String text = portTextf.getText().replaceAll("\\s+", "");
-                    BattleshipServer server = new Server();
-                    Registry registry = LocateRegistry.createRegistry(Integer.parseInt(text));
-                    registry.rebind("BattleshipServer", server);
-                    System.out.println("Server ready");
-                    server.game(true);
-                } catch (RemoteException ex) {
-                    ex.printStackTrace();
-                } catch (Exception ex) {
-                    ex.printStackTrace();
-                }
-                connectionframe.setVisible(false);
-                connectionframe.dispose();
+        hostButton.addActionListener(e -> {
+            try {
+                String text = portTextf.getText().replaceAll("\\s+", "");
+                BattleshipServer server = new Server();
+                Registry registry = LocateRegistry.createRegistry(Integer.parseInt(text));
+                registry.rebind("BattleshipServer", server);
+                System.out.println("Server ready");
+                server.game(true);
+            } catch (Exception ex) {
+                ex.printStackTrace();
             }
+            connectionframe.setVisible(false);
+            connectionframe.dispose();
         });
-        connectionButton.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                if (!ipTextf.equals("") && !portTextf.equals("")){
-                    try {
-                        String textIP = ipTextf.getText().replaceAll("\\s+", "");
-                        String textPort = portTextf.getText().replaceAll("\\s+", "");
-                        Client client = new Client(textIP, Integer.parseInt(textPort));
-                        System.out.println(client.method());
-                    } catch (RemoteException ex) {
-                        System.out.println("Verbindung nicht möglich");
-                    } catch (NotBoundException ex) {
-                        System.out.println("Verbindung nicht möglich");
-                    }
+        connectionButton.addActionListener(e -> {
+            if (!ipTextf.getText().equals("") && !portTextf.getText().equals("")){
+                try {
+                    String textIP = ipTextf.getText().replaceAll("\\s+", "");
+                    String textPort = portTextf.getText().replaceAll("\\s+", "");
+                    Client client = new Client(textIP, Integer.parseInt(textPort));
+                    System.out.println(client.method());
+                } catch (RemoteException | NotBoundException ex) {
+                    System.out.println("Verbindung nicht möglich");
                 }
-                connectionframe.setVisible(false);
-                connectionframe.dispose();
             }
+            connectionframe.setVisible(false);
+            connectionframe.dispose();
         });
     }
 }
