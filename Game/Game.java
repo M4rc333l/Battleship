@@ -205,6 +205,7 @@ public class Game {
                                 ex.printStackTrace();
                             }
                             playground.enabled(true);
+                            frame.getStartButton().setEnabled(false);
                         }
                     }
                 });
