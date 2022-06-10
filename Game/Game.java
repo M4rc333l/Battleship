@@ -89,24 +89,22 @@ public class Game {
                                         enemyPlayground = enemyPlayground.copyPlayground(playground, 1);
                                         enemyPlayground.enabled(false);
                                         try {
-                                            if (host && server.getHostTurn()) {
+                                            if (host) {
                                                 sendPlayground(1);
                                                 server.changeHostTurn();
-                                                turn--;
                                                 frame.setText("Server playground kopiert");
-                                            } else if(!(host || server.getHostTurn())) {
+                                            } else if(!host) {
                                                 sendPlayground(2);
                                                 server.changeHostTurn();
-                                                turn--;
                                                 frame.setText("Client playground kopiert");
-                                            } else if(!host && server.getHostTurn()) frame.setText("Bitte auf Server warten");
+                                            }
                                         } catch (RemoteException ex) {
                                             ex.printStackTrace();
                                         }
                                     }
                                 }
-                            } else if (turn == -1) {
-                                /*try {
+                            } /*else if (turn == -1) {
+                                try {
                                     if (host && server.getHostTurn()) {
                                         sendPlayground(1);
                                         server.changeHostTurn();
@@ -120,8 +118,8 @@ public class Game {
                                     } else if(!host && server.getHostTurn()) frame.setText("Bitte auf Server warten");
                                 } catch (RemoteException ex) {
                                     ex.printStackTrace();
-                                }*/
-                            } else if (turn == -2) {
+                                }
+                            } */else if (turn == -1) {
                                 try {
                                     if (host && server.getHostTurn()) {
                                         getPlayground(2, playground);
