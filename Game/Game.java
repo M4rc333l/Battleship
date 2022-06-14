@@ -20,7 +20,6 @@ public class Game {
     private boolean hit = false;
     private BattleshipFrame frame;
 
-    //Playground erstellen und Schiffliste erstellen
     private final Playground playground = new Playground();
     private Playground enemyPlayground = new Playground();
 

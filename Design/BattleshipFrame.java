@@ -5,7 +5,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 
 import static java.awt.BorderLayout.CENTER;
@@ -16,7 +15,6 @@ public class BattleshipFrame extends JFrame {
     private final JPanel pCenter = new JPanel();
     private final JTextArea chat = new JTextArea(10, 100);
     private final JButton startButton = new JButton("Start");
-    private final JScrollPane scrollBar = new JScrollPane(chat, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
     private final ArrayList<String> chatList = new ArrayList<>();
     private final JLabel timer = new JLabel();
 
@@ -42,6 +40,7 @@ public class BattleshipFrame extends JFrame {
         chat.setEnabled(false);
         chat.setLineWrap(true);
         chat.setWrapStyleWord(true);
+        JScrollPane scrollBar = new JScrollPane(chat, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
         pSouth.add(scrollBar, 0);
         pCenter.setLayout(new GridBagLayout());
         add(pCenter, CENTER);
@@ -50,8 +49,11 @@ public class BattleshipFrame extends JFrame {
         add(pWest, BorderLayout.WEST);
         add(pEast, BorderLayout.EAST);
         try {
-            File shipImage = new File("ShipImage.png");
-            pNorth.add(new ImageLabel(shipImage).getPic());
+            ImageFilter filter = new ImageFilter("shipImage");
+            File shipImage = filter.getFile();
+            BufferedImage image = ImageIO.read(shipImage);
+            JLabel pic = new JLabel(new ImageIcon(image));
+            pNorth.add(pic);
         } catch (Exception e) {
             System.out.println("Bild konnte nicht geladen werden");
         }
@@ -59,7 +61,6 @@ public class BattleshipFrame extends JFrame {
         startTimer();
         setVisible(true);
     }
-
     public void setText(String text) {
         chatList.add(text);
         String result = "";
@@ -68,7 +69,6 @@ public class BattleshipFrame extends JFrame {
         }
         chat.setText(result);
     }
-
     public void initialGUI(int size, Playground playground) {
         constraints.insets = new Insets(6, 6, 6, 6);
         constraints.gridwidth = 1;
@@ -86,17 +86,14 @@ public class BattleshipFrame extends JFrame {
             for (int j = 0; j < 10; j++) {
                 constraints.gridx = i + 1;
                 constraints.gridy = j + 1;
-                //Hier wird der Playground in einen Frame eingefügt
                 pCenter.add(playground.getPlayground()[i - (size - 10)][j], constraints);
             }
         }
         setVisible(true);
     }
-
     public JButton getStartButton() {
         return startButton;
     }
-
     public void startTimer() {
         Thread t1 = new Thread() {
             int hour = 0;
@@ -131,18 +128,21 @@ public class BattleshipFrame extends JFrame {
         };
         t1.start();
     }
+    private static class ImageFilter{
 
-    private static class ImageLabel extends JLabel {
+        private File file;
 
-        private final JLabel pic;
-
-        public ImageLabel(File file) throws IOException {
-            super();
-            BufferedImage image = ImageIO.read(file);
-            pic = new JLabel(new ImageIcon(image));
+        public ImageFilter(String dir) {
+            String[] exStrings = new String[]{"jpeg", "jpg","png"};
+            for(String ext: exStrings) {
+                file = new File(dir + "."+ext);
+                if(file.isFile()){
+                    break;
+                }
+            }
         }
-        public JLabel getPic(){
-            return pic;
+        public File getFile(){
+            return file;
         }
     }
 }
