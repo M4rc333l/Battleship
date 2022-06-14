@@ -158,17 +158,20 @@ public class Game {
                                 getPlayground(2, playground);
                                 frame.setText("Client playground auf Server kopiert");
                                 turn--;
+                                playground.enabled(true);
+                                frame.getStartButton().setEnabled(false);
                             }
                             else if (!(host || !server.getHostCopy())) {
                                 getPlayground(1, playground);
                                 frame.setText("Server playground auf Client kopiert");
                                 turn--;
-                            }
+                                playground.enabled(true);
+                                frame.getStartButton().setEnabled(false);
+                            } else if(host && !server.getClientCopy()) frame.setText("Bitte auf Client warten");
+                            else frame.setText("Bitte auf Server warten");
                         } catch (RemoteException ex) {
                             lostConnection();
                         }
-                        playground.enabled(true);
-                        frame.getStartButton().setEnabled(false);
                     }
                 });
             }

@@ -6,8 +6,6 @@ import RMI.Server;
 
 import javax.swing.*;
 import java.awt.*;
-import java.rmi.NotBoundException;
-import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 
@@ -66,7 +64,7 @@ public class MainOverlay {
                 connectionframe.dispose();
                 server.game(true);
             } catch (Exception ex) {
-                System.out.println("Bitte Port eingeben");
+                System.out.println("Verbindung nicht möglich");
             }
         });
         connectionButton.addActionListener(e -> {
@@ -75,13 +73,12 @@ public class MainOverlay {
                     String textIP = ipTextf.getText().replaceAll("\\s+", "");
                     String textPort = portTextf.getText().replaceAll("\\s+", "");
                     Client client = new Client(textIP, Integer.parseInt(textPort));
+                    connectionframe.dispose();
                     System.out.println(client.method());
-                } catch (RemoteException | NotBoundException ex) {
+                } catch (Exception ex) {
                     System.out.println("Verbindung nicht möglich");
                 }
             }
-            connectionframe.setVisible(false);
-            connectionframe.dispose();
         });
     }
 }
