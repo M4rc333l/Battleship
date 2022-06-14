@@ -13,8 +13,8 @@ public class Ship implements Serializable {
 
     /**
      * Konstruktor
-     * @param size
-     * @param pos
+     * @param size Groese des Schiffes
+     * @param pos Positionen des Schiffes
      */
     public Ship(int size, int[][] pos) {
         this.size = size;
@@ -32,11 +32,5 @@ public class Ship implements Serializable {
     }
     public boolean isDestroyed(){
         return destroyed;
-    }
-
-    //toString
-    @Override
-    public String toString(){
-        return "Size: " + size;
     }
 }

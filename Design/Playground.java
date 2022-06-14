@@ -14,10 +14,6 @@ public class Playground {
     private final Color waterColor = new Color(80, 150, 255);
     private final Color shipColor = new Color(0,0,0);
 
-
-    /**
-     * Konstruktor erstell den PlayGround
-     */
     public Playground(){
         for (int i = 0; i < playground.length; i++) {
             for (int j = 0; j < playground[i].length; j++) {
@@ -40,13 +36,12 @@ public class Playground {
     }
 
     /**
-     * In der hasNeihgbour Methode wird abgefragt, ob ein Kästchen einen Nachbarn hat.
-     * @param x
-     * @param y
-     * @param color
-     * @return
+     * Es wird ueberprueft, ob ein Button einen Nachbarn hat mit der einer bestimmten Farbe
+     * @param x x-Koordinate des Buttons
+     * @param y y-Koordinate des Buttons
+     * @param color Farbe, welche ueberprueft wird
+     * @return true, falls es einen Nachbarn gibt
      */
-
     public boolean hasNeighbor(int x, int y, Color color) {
         boolean hasNeighbor = false;
         try{
@@ -101,11 +96,11 @@ public class Playground {
     }
 
     /**
-     * In change Button wird je nach Status die Buttons schwarz, Grau oder Blau gesetzt.
-     * @param x
-     * @param y
-     * @param size
-     * @param change
+     * @param x x-Koordinate des Buttons
+     * @param y y-Koordinate des Buttons
+     * @param size Groese des aktuellen Schiffes
+     * @param change true, wenn alle Buttons aktiviert werden sollen, die ein Startpunkt sein koennen
+     *               false, wenn alle Buttons deaktiviert werden sollen, die kein Endpunkt sein koennen
      */
     public void changeButtons(int x, int y, int size, boolean change) {
         size--;
@@ -132,8 +127,8 @@ public class Playground {
     }
 
     /**
-     * Ob es eine möglichkeit gibt in der position ein Schiff zu setzten.
-     * @param size
+     * Deaktiviert alle Buttons, welche keine Moeglichkeit bieten, das aktuelle Schiff zu setzen
+     * @param size Akutelle Schiffgroese
      */
     public void disableNotPlaceable(int size) {
         size--;
@@ -173,8 +168,8 @@ public class Playground {
     }
 
     /**
-     * Hier werden die Buttons wieder auf Blau gesetzt
-     * @param deleteList
+     * Playground wird auf Anfang zurueckgesetzt
+     * @param deleteList true, wenn die Schiffliste entfernt werden soll
      */
     public void clear(boolean deleteList){
         for (JButton[] jButtons : playground) {
@@ -191,20 +186,17 @@ public class Playground {
     }
 
     /**
-     * In der Methode copyPLayground wird ein Playground kopiert
-     * @param playground
-     * @param mode
-     * @return
+     * Ein Playground wird dupliziert
+     * @param playground Playground, von welchem die Attribute kopiert werden sollen
+     * @return Gibt das Duplikat des Playgrounds zurueck
      */
-    public Playground copyPlayground(Playground playground, int mode) {
+    public Playground copyPlayground(Playground playground) {
         clear(true);
         for(int i=0;i<this.playground.length;i++) {
             for(int j=0;j<this.playground[i].length;j++) {
-                if(mode == 1) {
-                    if(playground.getPlayground()[i][j].getBackground().equals(shipColor)) {
-                        this.getPlayground()[i][j].setBackground(playground.getPlayground()[i][j].getBackground());
-                    }
-                } else if(mode == 2) this.getPlayground()[i][j].setBackground(playground.getPlayground()[i][j].getBackground());
+                if(playground.getPlayground()[i][j].getBackground().equals(shipColor)) {
+                    this.getPlayground()[i][j].setBackground(playground.getPlayground()[i][j].getBackground());
+                }
             }
         }
         for (int i=0;i<playground.getShipList().size();i++) {
@@ -219,8 +211,9 @@ public class Playground {
     }
 
     /**
-     * Die Methode enabled aktiviert die buttons nach dem ein Schiff gesetzt wurde
-     * @param enable
+     * Aktiviert oder deaktiviert alle Buttons
+     * @param enable true zum aktivieren
+     *               false zum deaktivieren
      */
     public void enabled(boolean enable){
         for (JButton[] jButtons : this.playground) {
@@ -232,8 +225,8 @@ public class Playground {
     }
 
     /**
-     * ShipDestroeyed gibt an, ob ein Schiff zerstört wurde
-     * @return
+     * @return true, wenn alle Schiffe zerstoert sind
+     *         false, wenn noch mindestens ein Schiff nicht zerstoert ist
      */
     public boolean shipsDestroyed(){
         boolean destroyed = true;

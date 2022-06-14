@@ -13,8 +13,8 @@ public class Client {
 
     /**
      * Konstruktor des Clients um eine Verbindung aufzubauen wie auch das Spiel zu Starten
-     * @param ip
-     * @param port
+     * @param ip Ip-Adresse des Servers
+     * @param port Port des Servers
      * @throws RemoteException
      * @throws NotBoundException
      */
@@ -24,12 +24,10 @@ public class Client {
     }
 
     /**
-     * Client startet Spiel
-     * @return
+     * Client startet das Spiel
      */
-    public String method() {
+    public void game() {
         Game game = new Game(server);
         game.game(false);
-        return "started Client";
     }
 }

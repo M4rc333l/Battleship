@@ -14,10 +14,8 @@ public class MainOverlay {
     private final JFrame connectionframe;
 
     /**
-     * MainOverlay konsturktor
-     * Hier wird entschieden, ob der User, Hosten oder Joinen möchten.
+     * Fenster zum hosten oder joinen eines Spiels
      */
-
     public MainOverlay() {
         connectionframe = new JFrame("Join Game");
         connectionframe.setSize(300,200);
@@ -79,7 +77,7 @@ public class MainOverlay {
                     String textPort = portTextf.getText().replaceAll("\\s+", "");
                     Client client = new Client(textIP, Integer.parseInt(textPort));
                     connectionframe.dispose();
-                    System.out.println(client.method());
+                    client.game();
                 } catch (Exception ex) {
                     System.out.println("Verbindung nicht möglich");
                 }

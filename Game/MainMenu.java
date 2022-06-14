@@ -3,7 +3,7 @@ package Game;
 import Design.MainOverlay;
 
 /**
- * Starteinstieg
+ * Starten des Spiels
  */
 public class MainMenu {
     public static void main(String[] args) {

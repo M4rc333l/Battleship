@@ -8,8 +8,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Die Server Klasse ist auch ein Spieler.
- * Die Klasse hat alle Methoden um die bestimmten Attributen des Spiels zu empfangen und zu senden.
+ * Die Server Klasse ist auch ein Spieler
+ * Die Klasse hat alle Methoden, um die bestimmten Attributen des Spiels zu empfangen und zu senden
  */
 public class Server extends UnicastRemoteObject implements BattleshipServer {
 
@@ -26,10 +26,6 @@ public class Server extends UnicastRemoteObject implements BattleshipServer {
 
     private int current = 0;
 
-    /**
-     * Konstruktor
-     * @throws RemoteException
-     */
     public Server() throws RemoteException {
         super();
     }
@@ -67,10 +63,26 @@ public class Server extends UnicastRemoteObject implements BattleshipServer {
     public void changeWinner(){
         winner = true;
     }
+    @Override
+    public void increaseCurrent() {
+        current++;
+    }
+    @Override
+    public void resetCurrent() {
+        current = 0;
+    }
+    @Override
+    public int getLength1() {
+        return xList1.size();
+    }
+    @Override
+    public int getLength2() {
+        return xList2.size();
+    }
 
     /**
-     * Starten des Spiel als Host oder Client.
-     * @param host
+     * Starten des Spiels
+     * @param host Bestimmt, ob der Spieler Host oder Client ist
      */
     @Override
     public void game(boolean host) {
@@ -79,10 +91,9 @@ public class Server extends UnicastRemoteObject implements BattleshipServer {
     }
 
     /**
-     * Die Methode empfängt die Position vom anderen Spieler.
-     * @param p
-     * @param pos
-     * @return
+     * @param p 1 = Host und 2 = Client
+     * @param pos Position in der Liste
+     * @return Gibt die Positionen der Schiffe zurueck
      */
     @Override
     public int getPos(int p, int pos) {
@@ -92,10 +103,10 @@ public class Server extends UnicastRemoteObject implements BattleshipServer {
     }
 
     /**
-     * Die Methode sendet die Position zum anderne Spieler.
-     * @param x
-     * @param y
-     * @param p
+     * Die Methode speichert die Position in der jeweiligen Schiffliste
+     * @param x x-Koordinate
+     * @param y y-Koordinate
+     * @param p 1 = Host und 2 = Client
      */
     @Override
     public void sendPos(int x, int y, int p) {
@@ -108,33 +119,14 @@ public class Server extends UnicastRemoteObject implements BattleshipServer {
         }
     }
 
-    @Override
-    public void increaseCurrent() {
-        current++;
-    }
-    @Override
-    public void resetCurrent() throws RemoteException {
-        current = 0;
-    }
-    @Override
-    public int getLength1() throws RemoteException {
-        return xList1.size();
-    }
-    @Override
-    public int getLength2() throws RemoteException {
-        return xList2.size();
-    }
-
     /**
-     * Die Methode empfängt ein Hit vom anderen Spieler
-     * @param p
-     * @param x
-     * @param pos
-     * @return
-     * @throws RemoteException
+     * @param p 1 = Host und 2 = Client
+     * @param x true fuer x-Koordinate, false fuer y-Koordinate
+     * @param pos Position in der Liste der Schuesse
+     * @return Gibt einen Hit vom anderen Spieler zurueck
      */
     @Override
-    public int getHit(int p, boolean x, int pos) throws RemoteException {
+    public int getHit(int p, boolean x, int pos) {
         if(p==1 && x) return xList1.get(pos);
         else if(p==1) return yList1.get(pos);
         else if(p==2 && x) return xList2.get(pos);
@@ -143,10 +135,10 @@ public class Server extends UnicastRemoteObject implements BattleshipServer {
     }
 
     /**
-     * Die Methode sendet ein Hit zum anderen Spieler
-     * @param x
-     * @param y
-     * @param p
+     * Die Methode speichert einen Hit eines Spielers
+     * @param x x-Koordinate
+     * @param y y-Koordinate
+     * @param p 1 = Host und 2 = Client
      */
     @Override
     public void sendHit(int x, int y, int p) {

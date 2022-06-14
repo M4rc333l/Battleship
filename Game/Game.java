@@ -9,7 +9,7 @@ import java.awt.event.MouseEvent;
 import java.rmi.RemoteException;
 
 /**
- * In der Game Klasse läuft die ganze Logik des Spiels ab.
+ * In der Game Klasse laeuft die Logik des eigentlichen Spiels ab
  */
 public class Game {
 
@@ -18,19 +18,23 @@ public class Game {
     public Game(BattleshipServer server){
         this.server = server;
     }
-
+    //Spielphase
     private int turn = 7;
+    //True, wenn ein Spieler ein Schiff getroffen hat
     private boolean hit = false;
     private BattleshipFrame frame;
 
-    //Playground erstellen und Schiffliste erstellen
     private final Playground playground = new Playground();
     private Playground enemyPlayground = new Playground();
 
 
     /**
-     * Die Game Methode ist der ganze Ablauf des Spiels.
-     * @param host
+     * Die Game Methode ist der ganze Ablauf des Spiels
+     * Es werden erst alle Schiffe platziert
+     * Dann muessen beide Spieler auf den Startbutton klicken, um den gegnerischen Playground abzurufen
+     * Dann faengt der Host an zu schießen,
+     * Das Spiel endet, sobald ein Spieler alle Schiffe getroffen hat
+     * @param host true beim Server, false beim Client
      */
     public void game(boolean host) {
 
@@ -51,20 +55,20 @@ public class Game {
                 try {
                     if (host && server.getClientCopy()) {
                         getPlayground(2, playground);
-                        frame.setText("Client playground auf Server kopiert");
+                        frame.setText("Gegnerischer Playground empfangen! Du darfst anfangen!");
                         turn--;
                         playground.enabled(true);
                         frame.getStartButton().setEnabled(false);
                     }
                     else if (!(host || !server.getHostCopy())) {
                         getPlayground(1, playground);
-                        frame.setText("Server playground auf Client kopiert");
+                        frame.setText("Gegnerischer Playground empfangen!");
                         turn--;
                         playground.enabled(true);
                         frame.getStartButton().setEnabled(false);
                     }
-                    else if(host && !server.getClientCopy()) frame.setText("Bitte auf Client warten");
-                    else frame.setText("Bitte auf Server warten");
+                    else if(host && !server.getClientCopy()) frame.setText("Bitte warte bis Spieler 2 alle Schiffe platziert hat!");
+                    else frame.setText("Bitte warte bis Spieler 1 alle Schiffe platziert hat!");
                 } catch (RemoteException ex) {
                     lostConnection();
                 }
@@ -105,21 +109,22 @@ public class Game {
                                     zaehler[0] = 0;
                                     turn--;
                                     if(turn == -1) {
-                                        enemyPlayground = enemyPlayground.copyPlayground(playground, 1);
+                                        enemyPlayground = enemyPlayground.copyPlayground(playground);
                                         enemyPlayground.enabled(false);
                                         try {
                                             if (host) {
                                                 sendPlayground(1);
-                                                frame.setText("Server playground kopiert");
+                                                frame.setText("Playground an Gegner gesendet!");
                                                 server.setHostCopy();
                                             } else {
                                                 sendPlayground(2);
-                                                frame.setText("Client playground kopiert");
+                                                frame.setText("Playground an Gegner gesendet!");
                                                 server.setClientCopy();
                                             }
                                         } catch (RemoteException ex) {
                                             lostConnection();
                                         }
+                                        playground.enabled(false);
                                         frame.getStartButton().setEnabled(true);
                                     }
                                 }
@@ -129,6 +134,7 @@ public class Game {
                                         if(server.getWinner()) {
                                             frame.setText("Du hast leider verloren! Spieler 2 hat gewonnen!");
                                             turn = Integer.MIN_VALUE;
+                                            getHits(2, enemyPlayground);
                                         } else {
                                             server.sendHit(finalI, finalJ, 1);
                                             playground.getPlayground()[finalI][finalJ].setEnabled(false);
@@ -137,11 +143,12 @@ public class Game {
                                         getHits(2, enemyPlayground);
                                         if(hit) hit = false;
                                         else server.changeHostTurn();
-                                    } else if(host && !server.getHostTurn()) frame.setText("Bitte auf Client warten");
+                                    } else if(host && !server.getHostTurn()) frame.setText("Du bist nicht dran! Bitte auf Spieler 2 warten!");
                                     else if(!(host || server.getHostTurn())) {
                                         if(server.getWinner()) {
-                                            frame.setText("Du hast leider verloren! Spieler 1 hat gewonnen");
+                                            frame.setText("Du hast leider verloren! Spieler 1 hat gewonnen!");
                                             turn = Integer.MIN_VALUE;
+                                            getHits(1, enemyPlayground);
                                         } else {
                                             server.sendHit(finalI, finalJ, 2);
                                             playground.getPlayground()[finalI][finalJ].setEnabled(false);
@@ -150,7 +157,7 @@ public class Game {
                                         }
                                         if(hit) hit = false;
                                         else server.changeHostTurn();
-                                    } else if(!host && server.getHostTurn()) frame.setText("Bitte auf Server warten");
+                                    } else if(!host && server.getHostTurn()) frame.setText("Du bist nicht dran! Bitte auf Spieler 1 warten!");
                                 } catch (RemoteException ex) {
                                     lostConnection();
                                 }
@@ -164,7 +171,6 @@ public class Game {
                                             server.changeHostTurn();
                                             server.changeWinner();
                                             getHits(2, enemyPlayground);
-
                                         } catch (RemoteException ex) {
                                             lostConnection();
                                         }
@@ -188,12 +194,12 @@ public class Game {
     }
 
     /**
-     * In der placeShip Methode werden die Schiffe platziert un die Schiffe werden in einer Liste gespiechert.
-     * @param x1
-     * @param y1
-     * @param x2
-     * @param y2
-     * @param size
+     * Die Schiffe werden platziert und in einer Liste gespeichert
+     * @param x1 x-Startpunkt
+     * @param y1 y-Startpunkt
+     * @param x2 x-Endpunkt
+     * @param y2 x-Endpunkt
+     * @param size Groese des Schiffes
      */
     public void placeShip(int x1, int y1, int x2, int y2, int size) {
         int [][] pos = new int[2][size];
@@ -228,8 +234,8 @@ public class Game {
     }
 
     /**
-     * Die Methode shipDestroyed bestimmt ob ein Schiff zerstört wurde.
-     * @param playground
+     * Bestimmt, ob ein Schiff zerstoert wurde
+     * @param playground Playground fuer welchen dies ueberprueft werden soll
      */
     public void shipDestroyed(Playground playground) {
         for (int i = 0; i < playground.getShipList().size(); i++) {
@@ -257,11 +263,12 @@ public class Game {
     }
 
     /**
-     * Die Methode hit wird ein Treffer festgestellt.
-     * @param x
-     * @param y
-     * @param playground
-     * @param disable
+     * Setzt einen Schuss in einen Playground
+     * @param x x-Koordinate
+     * @param y y-Koordinate
+     * @param playground Playground in den geschossen wird
+     * @param disable true, wenn die globale Variable hit aktualisiert werden soll bei einem Treffer
+     *                false, wenn sie nicht aktualisiert werden soll (Beim Schießen in den zweiten Playground)
      */
     public void hit(int x, int y, Playground playground, boolean disable) {
         for (Ship ship : playground.getShipList()) {
@@ -278,8 +285,8 @@ public class Game {
     }
 
     /**
-     * Die Methode sendet einen Playground zu einem anderen Spieler
-     * @param p
+     * Sendet alle Positionen der Schiffe zum Server
+     * @param p 1 = Host und 2 = Client
      * @throws RemoteException
      */
     public void sendPlayground(int p) throws RemoteException {
@@ -293,9 +300,9 @@ public class Game {
     }
 
     /**
-     * Die Methode erhält einen Playground zu einem anderen Spieler
-     * @param p
-     * @param playground
+     * Ruft die Positionen der gegnerischen Schiffe vom Server ab
+     * @param p 1 = Host und 2 = Client
+     * @param playground Playground in welchen die gegnerischen Schiffe gesetzt werden sollen
      * @throws RemoteException
      */
     public void getPlayground(int p, Playground playground) throws RemoteException {
@@ -311,9 +318,9 @@ public class Game {
     }
 
     /**
-     * Ein Spieler erhält vom anderen Spieler den Hit
-     * @param p
-     * @param playground
+     * Ruft alle bisherigen Schuesse des Gegners ab
+     * @param p 1 = Host und 2 = Client
+     * @param playground Playground in welchen die Schuesse gesetzt werden sollen
      * @throws RemoteException
      */
     public void getHits(int p, Playground playground) throws RemoteException {
@@ -326,15 +333,10 @@ public class Game {
     }
 
     /**
-     * Ein ErrorMessage, falls keine Verbindung mehr exestiert.
+     * ErrorMessage, falls keine Verbindung mehr existiert
      */
     public void lostConnection() {
-        try {
-            frame.setText("Verbindung zum Server verloren");
-            Thread.sleep(5000);
-            frame.dispose();
-        } catch(Exception e){
-            frame.setText("Verbindung verloren");
-        }
+        System.out.println("Verbindung verloren!");
+        frame.dispose();
     }
 }

@@ -17,8 +17,9 @@ public class BattleshipFrame extends JFrame {
     private final JButton startButton = new JButton("Start");
     private final ArrayList<String> chatList = new ArrayList<>();
     private final JLabel timer = new JLabel();
+
     /**
-     * Der Konstruktor von BattleshipFrame erzeugt ein Frame, indem sich ein Playground im Center, Chat im Sünden, Timer im Osten, Bild im Norden, StartButton im Westen
+     * Erzeugt einen Frame, mit dem Spielfeld im Center, Chat im Sueden, Timer im Osten, Bild im Norden, StartButton im Westen
      */
     public BattleshipFrame() {
         super();
@@ -64,8 +65,8 @@ public class BattleshipFrame extends JFrame {
         setVisible(true);
     }
     /**
-     * In der Methode setText wird der chat aktualisiert.
-     * @param text
+     * Chatfenster wird aktualisiert
+     * @param text Wird in das Chatfenster eingebunden
      */
     public void setText(String text) {
         chatList.add(text);
@@ -76,9 +77,9 @@ public class BattleshipFrame extends JFrame {
         chat.setText(result);
     }
     /**
-     * initialGui: Positionierung des Playgrounds
-     * @param size
-     * @param playground
+     * Positionierung des Playgrounds
+     * @param size Startposition des Playgrounds
+     * @param playground Playground, welcher eingebunden wird
      */
     public void initialGUI(int size, Playground playground) {
         constraints.insets = new Insets(6, 6, 6, 6);
@@ -106,7 +107,7 @@ public class BattleshipFrame extends JFrame {
         return startButton;
     }
     /**
-     * Die Methode startTimer startet den Timer und aktualisiert sich jede Sekunde
+     * Startet und aktualisiert den Timer jede Sekunde mit einem Thread
      */
     public void startTimer() {
         Thread t1 = new Thread() {
@@ -143,15 +144,15 @@ public class BattleshipFrame extends JFrame {
         t1.start();
     }
     /**
-     * Innere Klasse um ein Image zu Filtern.
+     * Innere Klasse um ein Image zu filtern
      */
     private static class ImageFilter{
 
         private File file;
 
         /**
-         * Die Filter Methode
-         * @param dir
+         * Die Methode sucht die passende Datei fuer den uebergebenen Parameter
+         * @param dir Name des Bildes
          */
         public ImageFilter(String dir) {
             String[] exStrings = new String[]{"jpeg", "jpg","png"};
