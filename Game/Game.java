@@ -320,7 +320,7 @@ public class Game {
     /**
      * Ruft alle bisherigen Schuesse des Gegners ab
      * @param p 1 = Host und 2 = Client
-     * @param playground Playground in welchen die Schuesse gesetzt werden sollen
+     * @param playground Playground in welchen die Schuesse gesetzt werden
      * @throws RemoteException
      */
     public void getHits(int p, Playground playground) throws RemoteException {
