@@ -13,6 +13,11 @@ public class MainOverlay {
 
     private final JFrame connectionframe;
 
+    /**
+     * MainOverlay konsturktor
+     * Hier wird entschieden, ob der User, Hosten oder Joinen möchten.
+     */
+
     public MainOverlay() {
         connectionframe = new JFrame("Join Game");
         connectionframe.setSize(300,200);

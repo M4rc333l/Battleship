@@ -8,6 +8,9 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.rmi.RemoteException;
 
+/**
+ * In der Game Klasse läuft die ganze Logik des Spiels ab.
+ */
 public class Game {
 
     private final BattleshipServer server;
@@ -20,9 +23,15 @@ public class Game {
     private boolean hit = false;
     private BattleshipFrame frame;
 
+    //Playground erstellen und Schiffliste erstellen
     private final Playground playground = new Playground();
     private Playground enemyPlayground = new Playground();
 
+
+    /**
+     * Die Game Methode ist der ganze Ablauf des Spiels.
+     * @param host
+     */
     public void game(boolean host) {
 
         frame = new BattleshipFrame();
@@ -177,6 +186,15 @@ public class Game {
             }
         }
     }
+
+    /**
+     * In der placeShip Methode werden die Schiffe platziert un die Schiffe werden in einer Liste gespiechert.
+     * @param x1
+     * @param y1
+     * @param x2
+     * @param y2
+     * @param size
+     */
     public void placeShip(int x1, int y1, int x2, int y2, int size) {
         int [][] pos = new int[2][size];
         boolean vertical = y1 - y2 != 0;
@@ -208,6 +226,11 @@ public class Game {
         }
         playground.getShipList().add(new Ship(size,pos));
     }
+
+    /**
+     * Die Methode shipDestroyed bestimmt ob ein Schiff zerstört wurde.
+     * @param playground
+     */
     public void shipDestroyed(Playground playground) {
         for (int i = 0; i < playground.getShipList().size(); i++) {
             boolean destroyed = true;
@@ -226,12 +249,20 @@ public class Game {
         for (int i = 0; i < playground.getPlayground().length; i++) {
             for (int j = 0; j < playground.getPlayground()[i].length; j++) {
                 if(playground.hasNeighbor(i,j,Color.RED) && !playground.getPlayground()[i][j].getBackground().equals(Color.RED)){
-                        playground.getPlayground()[i][j].setEnabled(false);
-                        playground.getPlayground()[i][j].setBackground(Color.GRAY);
+                    playground.getPlayground()[i][j].setEnabled(false);
+                    playground.getPlayground()[i][j].setBackground(Color.GRAY);
                 }
             }
         }
     }
+
+    /**
+     * Die Methode hit wird ein Treffer festgestellt.
+     * @param x
+     * @param y
+     * @param playground
+     * @param disable
+     */
     public void hit(int x, int y, Playground playground, boolean disable) {
         for (Ship ship : playground.getShipList()) {
             for (int j = 0; j < ship.getSize(); j++) {
@@ -245,6 +276,12 @@ public class Game {
         }
         playground.getPlayground()[x][y].setBackground(Color.WHITE);
     }
+
+    /**
+     * Die Methode sendet einen Playground zu einem anderen Spieler
+     * @param p
+     * @throws RemoteException
+     */
     public void sendPlayground(int p) throws RemoteException {
         for(int i = 0; i<enemyPlayground.getShipList().size();i++){
             for(int j = 0; j<enemyPlayground.getShipList().get(i).getSize();j++){
@@ -254,6 +291,13 @@ public class Game {
         }
         server.resetCurrent();
     }
+
+    /**
+     * Die Methode erhält einen Playground zu einem anderen Spieler
+     * @param p
+     * @param playground
+     * @throws RemoteException
+     */
     public void getPlayground(int p, Playground playground) throws RemoteException {
         for(int i = 0; i<playground.getShipList().size();i++){
             for(int j = 0; j<playground.getShipList().get(i).getSize();j++){
@@ -265,14 +309,25 @@ public class Game {
         playground.clear(false);
         server.resetCurrent();
     }
+
+    /**
+     * Ein Spieler erhält vom anderen Spieler den Hit
+     * @param p
+     * @param playground
+     * @throws RemoteException
+     */
     public void getHits(int p, Playground playground) throws RemoteException {
         int count = -1;
         if(p==1) count = server.getLength1();
         if(p==2) count = server.getLength2();
         for(int i =0;i<count;i++){
-                hit(server.getHit(p, true, i), server.getHit(p, false, i), playground, false);
+            hit(server.getHit(p, true, i), server.getHit(p, false, i), playground, false);
         }
     }
+
+    /**
+     * Ein ErrorMessage, falls keine Verbindung mehr exestiert.
+     */
     public void lostConnection() {
         try {
             frame.setText("Verbindung zum Server verloren");

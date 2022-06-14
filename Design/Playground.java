@@ -14,6 +14,10 @@ public class Playground {
     private final Color waterColor = new Color(80, 150, 255);
     private final Color shipColor = new Color(0,0,0);
 
+
+    /**
+     * Konstruktor erstell den PlayGround
+     */
     public Playground(){
         for (int i = 0; i < playground.length; i++) {
             for (int j = 0; j < playground[i].length; j++) {
@@ -34,6 +38,14 @@ public class Playground {
     public List<Ship> getShipList(){
         return shipList;
     }
+
+    /**
+     * In der hasNeihgbour Methode wird abgefragt, ob ein Kästchen einen Nachbarn hat.
+     * @param x
+     * @param y
+     * @param color
+     * @return
+     */
 
     public boolean hasNeighbor(int x, int y, Color color) {
         boolean hasNeighbor = false;
@@ -87,6 +99,14 @@ public class Playground {
         catch (ArrayIndexOutOfBoundsException ignored){}
         return hasNeighbor;
     }
+
+    /**
+     * In change Button wird je nach Status die Buttons schwarz, Grau oder Blau gesetzt.
+     * @param x
+     * @param y
+     * @param size
+     * @param change
+     */
     public void changeButtons(int x, int y, int size, boolean change) {
         size--;
         for (int i = 0; i < playground.length; i++) {
@@ -103,13 +123,18 @@ public class Playground {
                 }
                 else{
                     if(!((i==x+size && j==y)|| (i==x-size && j==y) || (i==x && j==y+size) || (i==x && j==y-size)) && !playground[i][j].getBackground().equals(shipColor)) {
-                            playground[i][j].setBackground(Color.GRAY);
-                            playground[i][j].setEnabled(false);
+                        playground[i][j].setBackground(Color.GRAY);
+                        playground[i][j].setEnabled(false);
                     }
                 }
             }
         }
     }
+
+    /**
+     * Ob es eine möglichkeit gibt in der position ein Schiff zu setzten.
+     * @param size
+     */
     public void disableNotPlaceable(int size) {
         size--;
         for (int i = 0; i < playground.length; i++) {
@@ -146,6 +171,11 @@ public class Playground {
             }
         }
     }
+
+    /**
+     * Hier werden die Buttons wieder auf Blau gesetzt
+     * @param deleteList
+     */
     public void clear(boolean deleteList){
         for (JButton[] jButtons : playground) {
             for (JButton jButton : jButtons) {
@@ -159,6 +189,13 @@ public class Playground {
             }
         }
     }
+
+    /**
+     * In der Methode copyPLayground wird ein Playground kopiert
+     * @param playground
+     * @param mode
+     * @return
+     */
     public Playground copyPlayground(Playground playground, int mode) {
         clear(true);
         for(int i=0;i<this.playground.length;i++) {
@@ -180,6 +217,11 @@ public class Playground {
         }
         return this;
     }
+
+    /**
+     * Die Methode enabled aktiviert die buttons nach dem ein Schiff gesetzt wurde
+     * @param enable
+     */
     public void enabled(boolean enable){
         for (JButton[] jButtons : this.playground) {
             for (JButton jButton : jButtons) {
@@ -188,6 +230,11 @@ public class Playground {
             }
         }
     }
+
+    /**
+     * ShipDestroeyed gibt an, ob ein Schiff zerstört wurde
+     * @return
+     */
     public boolean shipsDestroyed(){
         boolean destroyed = true;
         for (Ship ship : shipList) {

@@ -4,6 +4,10 @@ import java.rmi.Remote;
 import java.rmi.RemoteException;
 
 public interface BattleshipServer extends Remote {
+    /**
+     *
+     * Alle Methoden werden in der Klasse Server erklärt.
+     */
     void game(boolean host) throws Exception;
     int getPos(int p, int pos) throws RemoteException;
     void sendPos(int x, int y, int p) throws RemoteException;

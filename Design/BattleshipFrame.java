@@ -17,7 +17,9 @@ public class BattleshipFrame extends JFrame {
     private final JButton startButton = new JButton("Start");
     private final ArrayList<String> chatList = new ArrayList<>();
     private final JLabel timer = new JLabel();
-
+    /**
+     * Der Konstruktor von BattleshipFrame erzeugt ein Frame, indem sich ein Playground im Center, Chat im Sünden, Timer im Osten, Bild im Norden, StartButton im Westen
+     */
     public BattleshipFrame() {
         super();
         setSize(2000, 1000);
@@ -61,6 +63,10 @@ public class BattleshipFrame extends JFrame {
         startTimer();
         setVisible(true);
     }
+    /**
+     * In der Methode setText wird der chat aktualisiert.
+     * @param text
+     */
     public void setText(String text) {
         chatList.add(text);
         String result = "";
@@ -69,6 +75,11 @@ public class BattleshipFrame extends JFrame {
         }
         chat.setText(result);
     }
+    /**
+     * initialGui: Positionierung des Playgrounds
+     * @param size
+     * @param playground
+     */
     public void initialGUI(int size, Playground playground) {
         constraints.insets = new Insets(6, 6, 6, 6);
         constraints.gridwidth = 1;
@@ -94,6 +105,9 @@ public class BattleshipFrame extends JFrame {
     public JButton getStartButton() {
         return startButton;
     }
+    /**
+     * Die Methode startTimer startet den Timer und aktualisiert sich jede Sekunde
+     */
     public void startTimer() {
         Thread t1 = new Thread() {
             int hour = 0;
@@ -128,10 +142,17 @@ public class BattleshipFrame extends JFrame {
         };
         t1.start();
     }
+    /**
+     * Innere Klasse um ein Image zu Filtern.
+     */
     private static class ImageFilter{
 
         private File file;
 
+        /**
+         * Die Filter Methode
+         * @param dir
+         */
         public ImageFilter(String dir) {
             String[] exStrings = new String[]{"jpeg", "jpg","png"};
             for(String ext: exStrings) {
