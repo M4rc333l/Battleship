@@ -38,6 +38,30 @@ public class Game {
         final int[] x2 = {0};
         final int[] y2 = {0};
 
+        frame.getStartButton().addActionListener(e -> {
+            if(frame.getStartButton().isEnabled()) {
+                try {
+                    if (host && server.getClientCopy()) {
+                        getPlayground(2, playground);
+                        frame.setText("Client playground auf Server kopiert");
+                        turn--;
+                        playground.enabled(true);
+                        frame.getStartButton().setEnabled(false);
+                    }
+                    else if (!(host || !server.getHostCopy())) {
+                        getPlayground(1, playground);
+                        frame.setText("Server playground auf Client kopiert");
+                        turn--;
+                        playground.enabled(true);
+                        frame.getStartButton().setEnabled(false);
+                    }
+                    else if(host && !server.getClientCopy()) frame.setText("Bitte auf Client warten");
+                    else frame.setText("Bitte auf Server warten");
+                } catch (RemoteException ex) {
+                    lostConnection();
+                }
+            }
+        });
         for (int i = 0; i < playground.getPlayground().length; i++) {
             for (int j = 0; j < playground.getPlayground()[i].length; j++) {
                 int finalI = i;
@@ -148,29 +172,6 @@ public class Game {
                                     }
                                 }
                             }
-                        }
-                    }
-                });
-                frame.getStartButton().addActionListener(e -> {
-                    if(frame.getStartButton().isEnabled()) {
-                        try {
-                            if (host && server.getClientCopy()) {
-                                getPlayground(2, playground);
-                                frame.setText("Client playground auf Server kopiert");
-                                turn--;
-                                playground.enabled(true);
-                                frame.getStartButton().setEnabled(false);
-                            }
-                            else if (!(host || !server.getHostCopy())) {
-                                getPlayground(1, playground);
-                                frame.setText("Server playground auf Client kopiert");
-                                turn--;
-                                playground.enabled(true);
-                                frame.getStartButton().setEnabled(false);
-                            } else if(host && !server.getClientCopy()) frame.setText("Bitte auf Client warten");
-                            else frame.setText("Bitte auf Server warten");
-                        } catch (RemoteException ex) {
-                            lostConnection();
                         }
                     }
                 });

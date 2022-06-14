@@ -14,8 +14,9 @@ public class BattleshipFrame extends JFrame {
 
     private final GridBagConstraints constraints = new GridBagConstraints();
     private final JPanel pCenter = new JPanel();
-    private final JTextArea chat = new JTextArea();
+    private final JTextArea chat = new JTextArea(10, 100);
     private final JButton startButton = new JButton("Start");
+    private final JScrollPane scrollBar = new JScrollPane(chat, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
     private final ArrayList<String> chatList = new ArrayList<>();
     private final JLabel timer = new JLabel();
 
@@ -38,9 +39,10 @@ public class BattleshipFrame extends JFrame {
         pEast.add(timer, 0);
         pWest.add(startButton, 0);
         chat.setDisabledTextColor(Color.BLACK);
-        chat.setPreferredSize(new Dimension(1000, 200));
         chat.setEnabled(false);
-        pSouth.add(chat, 0);
+        chat.setLineWrap(true);
+        chat.setWrapStyleWord(true);
+        pSouth.add(scrollBar, 0);
         pCenter.setLayout(new GridBagLayout());
         add(pCenter, CENTER);
         add(pNorth, BorderLayout.NORTH);
@@ -104,7 +106,7 @@ public class BattleshipFrame extends JFrame {
             public void run() {
                 try {
                     while (true) {
-                        if (hour == 59 && minute == 59 && second == 59) Thread.interrupted();
+                        if (hour == 59 && minute == 59 && second == 59) Thread.currentThread().interrupt();
                         else if (minute == 59 && second == 59) {
                             minute = 0;
                             second = 0;
