@@ -63,12 +63,11 @@ public class MainOverlay {
                 Registry registry = LocateRegistry.createRegistry(Integer.parseInt(text));
                 registry.rebind("BattleshipServer", server);
                 System.out.println("Server ready");
+                connectionframe.dispose();
                 server.game(true);
             } catch (Exception ex) {
-                ex.printStackTrace();
+                System.out.println("Bitte Port eingeben");
             }
-            connectionframe.setVisible(false);
-            connectionframe.dispose();
         });
         connectionButton.addActionListener(e -> {
             if (!ipTextf.getText().equals("") && !portTextf.getText().equals("")){

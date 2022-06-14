@@ -6,7 +6,6 @@ import RMI.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.io.IOException;
 import java.rmi.RemoteException;
 
 public class Game {
@@ -128,7 +127,7 @@ public class Game {
                                 if (playground.shipsDestroyed()) {
                                     turn = Integer.MIN_VALUE;
                                     if(host) {
-                                        frame.setText("HOST GEWONNEN");
+                                        frame.setText("Du hast gewonnen!");
                                         try {
                                             server.changeHostTurn();
                                             server.changeWinner();
@@ -138,7 +137,7 @@ public class Game {
                                             lostConnection();
                                         }
                                     } else {
-                                        frame.setText("CLIENT GEWONNEN");
+                                        frame.setText("Du hast gewonnen!");
                                         try {
                                             server.changeHostTurn();
                                             server.changeWinner();
