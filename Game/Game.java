@@ -4,6 +4,8 @@ import Design.*;
 import RMI.*;
 
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.rmi.RemoteException;
@@ -50,6 +52,12 @@ public class Game {
         final int[] x2 = {0};
         final int[] y2 = {0};
 
+        frame.getRestartButton().addActionListener(e -> {
+            if(frame.getRestartButton().isEnabled()){
+                frame.dispose();
+                new MainOverlay();
+            }
+        });
         frame.getStartButton().addActionListener(e -> {
             if(frame.getStartButton().isEnabled()) {
                 try {
@@ -135,6 +143,7 @@ public class Game {
                                             frame.setText("Du hast leider verloren! Spieler 2 hat gewonnen!");
                                             turn = Integer.MIN_VALUE;
                                             getHits(2, enemyPlayground);
+                                            frame.getRestartButton().setEnabled(true);
                                         } else {
                                             server.sendHit(finalI, finalJ, 1);
                                             playground.getPlayground()[finalI][finalJ].setEnabled(false);
@@ -149,6 +158,7 @@ public class Game {
                                             frame.setText("Du hast leider verloren! Spieler 1 hat gewonnen!");
                                             turn = Integer.MIN_VALUE;
                                             getHits(1, enemyPlayground);
+                                            frame.getRestartButton().setEnabled(true);
                                         } else {
                                             server.sendHit(finalI, finalJ, 2);
                                             playground.getPlayground()[finalI][finalJ].setEnabled(false);
@@ -184,6 +194,7 @@ public class Game {
                                             lostConnection();
                                         }
                                     }
+                                    frame.getRestartButton().setEnabled(true);
                                 }
                             }
                         }

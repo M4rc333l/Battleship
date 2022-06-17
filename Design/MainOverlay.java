@@ -49,11 +49,11 @@ public class MainOverlay {
         connectionframe.getContentPane().add(connectionButton,constraints);
         constraints.gridx = 1;
         constraints.gridy = 0;
-        constraints.gridwidth=2;
+        constraints.gridwidth = 2;
         connectionframe.getContentPane().add(ipTextf,constraints);
         constraints.gridx = 1;
         constraints.gridy = 1;
-        constraints.gridwidth=2;
+        constraints.gridwidth = 2;
         connectionframe.getContentPane().add(portTextf,constraints);
         connectionframe.setVisible(true);
 
