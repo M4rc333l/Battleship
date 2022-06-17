@@ -4,10 +4,7 @@ import Design.*;
 import RMI.*;
 
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+import java.awt.event.*;
 import java.rmi.RemoteException;
 
 /**
@@ -28,7 +25,6 @@ public class Game {
 
     private final Playground playground = new Playground();
     private Playground enemyPlayground = new Playground();
-
 
     /**
      * Die Game Methode ist der ganze Ablauf des Spiels
@@ -52,10 +48,9 @@ public class Game {
         final int[] x2 = {0};
         final int[] y2 = {0};
 
-        frame.getRestartButton().addActionListener(e -> {
-            if(frame.getRestartButton().isEnabled()){
-                frame.dispose();
-                new MainOverlay();
+        frame.getExitButton().addActionListener(e -> {
+            if(frame.getExitButton().isEnabled()) {
+                frame.dispatchEvent(new WindowEvent(frame, WindowEvent.WINDOW_CLOSING));
             }
         });
         frame.getStartButton().addActionListener(e -> {
@@ -63,14 +58,14 @@ public class Game {
                 try {
                     if (host && server.getClientCopy()) {
                         getPlayground(2, playground);
-                        frame.setText("Gegnerischer Playground empfangen! Du darfst anfangen!");
+                        frame.setText("Gegnerischen Playground empfangen! Du darfst anfangen!");
                         turn--;
                         playground.enabled(true);
                         frame.getStartButton().setEnabled(false);
                     }
                     else if (!(host || !server.getHostCopy())) {
                         getPlayground(1, playground);
-                        frame.setText("Gegnerischer Playground empfangen!");
+                        frame.setText("Gegnerischen Playground empfangen!");
                         turn--;
                         playground.enabled(true);
                         frame.getStartButton().setEnabled(false);
@@ -143,7 +138,7 @@ public class Game {
                                             frame.setText("Du hast leider verloren! Spieler 2 hat gewonnen!");
                                             turn = Integer.MIN_VALUE;
                                             getHits(2, enemyPlayground);
-                                            frame.getRestartButton().setEnabled(true);
+                                            frame.getExitButton().setEnabled(true);
                                         } else {
                                             server.sendHit(finalI, finalJ, 1);
                                             playground.getPlayground()[finalI][finalJ].setEnabled(false);
@@ -158,7 +153,7 @@ public class Game {
                                             frame.setText("Du hast leider verloren! Spieler 1 hat gewonnen!");
                                             turn = Integer.MIN_VALUE;
                                             getHits(1, enemyPlayground);
-                                            frame.getRestartButton().setEnabled(true);
+                                            frame.getExitButton().setEnabled(true);
                                         } else {
                                             server.sendHit(finalI, finalJ, 2);
                                             playground.getPlayground()[finalI][finalJ].setEnabled(false);
@@ -194,7 +189,7 @@ public class Game {
                                             lostConnection();
                                         }
                                     }
-                                    frame.getRestartButton().setEnabled(true);
+                                    frame.getExitButton().setEnabled(true);
                                 }
                             }
                         }
@@ -348,6 +343,6 @@ public class Game {
      */
     public void lostConnection() {
         System.out.println("Verbindung verloren!");
-        frame.dispose();
+        frame.dispatchEvent(new WindowEvent(frame, WindowEvent.WINDOW_CLOSING));
     }
 }

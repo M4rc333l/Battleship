@@ -15,7 +15,7 @@ public class BattleshipFrame extends JFrame {
     private final JPanel pCenter = new JPanel();
     private final JTextArea chat = new JTextArea(10, 100);
     private final JButton startButton = new JButton("Start");
-    private final JButton restartButton = new JButton("Restart");
+    private final JButton exitButton = new JButton("Exit");
     private final ArrayList<String> chatList = new ArrayList<>();
     private final JLabel timer = new JLabel();
 
@@ -40,7 +40,7 @@ public class BattleshipFrame extends JFrame {
         pNorth.setBounds(50, 50, 800, 250);
         pEast.add(timer, 0);
         pWest.add(startButton, 0);
-        pWest.add(restartButton,1);
+        pWest.add(exitButton,1);
         chat.setDisabledTextColor(Color.BLACK);
         chat.setEnabled(false);
         chat.setLineWrap(true);
@@ -63,7 +63,7 @@ public class BattleshipFrame extends JFrame {
             System.out.println("Bild konnte nicht geladen werden");
         }
         startButton.setEnabled(false);
-        restartButton.setEnabled((false));
+        exitButton.setEnabled((false));
         startTimer();
         setVisible(true);
     }
@@ -109,8 +109,8 @@ public class BattleshipFrame extends JFrame {
     public JButton getStartButton() {
         return startButton;
     }
-    public JButton getRestartButton() {
-        return getStartButton();
+    public JButton getExitButton() {
+        return exitButton;
     }
     /**
      * Startet und aktualisiert den Timer jede Sekunde mit einem Thread
