@@ -22,7 +22,7 @@ public class BattleshipFrame extends JFrame {
      * Erzeugt einen Frame, mit dem Spielfeld im Center, Chat im Sueden, Timer im Osten, Bild im Norden, StartButton im Westen
      */
     public BattleshipFrame() {
-        super();
+        super("Battleships");
         setSize(2000, 1000);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLayout(new BorderLayout());
